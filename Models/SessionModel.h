@@ -7,18 +7,19 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 
 class SessionModel {
 
 public:
     // Data
-    uint32_t id;
     int socketfd;
-    std::vector<std::string> input_buffer;
+    std::vector<std::string> input_buffer_queue;
     std::string output_buffer;
 
-    // Semaphores
-
+    // Mutexes
+    std::mutex input_buffer_mutex;
+    std::mutex output_buffer_mutex;
 };
 
 

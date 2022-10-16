@@ -12,6 +12,7 @@ return std::string("\nServer Configuration:") +
         std::string("\n    Game Loop Thread Count: ") + std::to_string(game_loop_thread_count) +
         std::string("\n  Networking Settings:") +
         std::string("\n    Game Port: ") + std::to_string(game_port) +
+        std::string("\n    Connection Queue Size: ") + std::to_string(connection_queue_size) +
         std::string("\n  Game Settings:") +
         std::string("\n    Max Players: ") + std::to_string(max_players) +
         std::string("\n    World ID: ") + std::to_string(world_id) +

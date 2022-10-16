@@ -12,7 +12,7 @@
 class ConfigurationController {
 
 public:
-    std::shared_ptr<ConfigurationModel> getConfiguration(std::string configuration_file_path);
+    ConfigurationModel getConfiguration(std::string configuration_file_path);
 };
 
 

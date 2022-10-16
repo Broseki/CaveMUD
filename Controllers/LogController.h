@@ -6,6 +6,7 @@
 #define CAVEMUD_LOGCONTROLLER_H
 
 #include <string>
+#include <mutex>
 
 class LogController {
 private:
@@ -25,6 +26,7 @@ public:
 
 private:
     LogLevel log_level;
+    std::mutex log_mutex;
 
 public:
     static std::string log_level_to_string(LogLevel log_level);

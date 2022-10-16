@@ -26,7 +26,12 @@ add_executable(
         CaveMUD
         main.h main.cpp
         Models/ConfigurationModel.cpp Models/ConfigurationModel.h
-        Controllers/ConfigurationController.cpp Controllers/ConfigurationController.h Controllers/LogController.cpp Controllers/LogController.h Models/SessionModel.cpp Models/SessionModel.h)
+        Controllers/ConfigurationController.cpp Controllers/ConfigurationController.h
+        Controllers/LogController.cpp Controllers/LogController.h
+        Models/SessionModel.h
+        Controllers/ServerListenerController.cpp Controllers/ServerListenerController.h
+        Models/ServerSocketModel.h
+        Models/SessionsModel.h Controllers/ServerSocketController.cpp Controllers/ServerSocketController.h)
 
 target_link_libraries(
         CaveMUD

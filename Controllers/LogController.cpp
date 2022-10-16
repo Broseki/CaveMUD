@@ -49,9 +49,11 @@ LogController::LogLevel LogController::string_to_log_level(std::string log_level
 }
 
 void LogController::log(LogLevel log_level, std::string message) {
+    // Lock the log mutex safely (RAII)
+    const std::lock_guard<std::mutex> lock(log_mutex);
+
     // Check if the log level is high enough to log the message
     if (log_level >= this->log_level) {
-
         // Get the current time
         auto now = std::chrono::system_clock::now();
         std::time_t current_time = std::chrono::system_clock::to_time_t(now);

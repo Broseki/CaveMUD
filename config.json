@@ -5,7 +5,8 @@
     "game_loop_thread_count": 1
   },
   "networking_settings": {
-    "game_port": 12345
+    "game_port": 12345,
+    "connection_queue_size": 5
   },
   "game_settings": {
     "max_players": 100,
