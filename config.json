@@ -9,7 +9,7 @@
     "connection_queue_size": 5
   },
   "game_settings": {
-    "max_players": 100,
+    "max_players": 1,
     "world_id": 1,
     "tick_rate": 1
   },
