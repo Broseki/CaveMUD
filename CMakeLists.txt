@@ -31,7 +31,7 @@ add_executable(
         Models/SessionModel.h
         Controllers/ServerListenerController.cpp Controllers/ServerListenerController.h
         Models/ServerSocketModel.h
-        Models/SessionsModel.h Controllers/ServerSocketController.cpp Controllers/ServerSocketController.h)
+        Models/SessionsModel.h Controllers/ServerSocketController.cpp Controllers/ServerSocketController.h Controllers/SessionController.cpp Controllers/SessionController.h Controllers/SessionsController.cpp Controllers/SessionsController.h)
 
 target_link_libraries(
         CaveMUD

@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "ServerListenerController.h"
+#include "SessionsController.h"
 
 #define SERVER_FULL_MESSAGE "Server is full. Please try again later."
 
@@ -19,6 +20,7 @@ ServerListenerController::ServerListenerController(LogController *log_controller
     this->configuration_model = configuration_model;
     this->sessions = sessions;
 
+    this->sessions_controller = new SessionsController(sessions, configuration_model, log_controller);
     this->stopped = false;
 }
 
@@ -31,7 +33,8 @@ void ServerListenerController::start() {
         // Lock the socket mutex and accept a new connection
         this->server_socket_model->socket_mutex.lock();
         if (this->server_socket_model->socketfd < 0) {
-            this->log_controller->log(LogController::LogLevel::FATAL, "ServerListenerController::start() - Socket is closed");
+            this->log_controller->log(LogController::LogLevel::FATAL,
+                                      "ServerListenerController::start() - Socket is closed");
             this->stop();
             return;
         }
@@ -39,38 +42,34 @@ void ServerListenerController::start() {
         socklen_t address_length = sizeof(address);
         int client_socket = accept(this->server_socket_model->socketfd, (struct sockaddr *) &address, &address_length);
         if (client_socket < 0) {
-            this->log_controller->log(LogController::LogLevel::ERROR, "ServerListenerController::start() - Error accepting connection");
+            this->log_controller->log(LogController::LogLevel::ERROR,
+                                      "ServerListenerController::start() - Error accepting connection");
             this->server_socket_model->socket_mutex.unlock();
             continue;
         }
 
         // Unlock the socket mutex and handle the session initialization tasks
         this->server_socket_model->socket_mutex.unlock();
-        this->log_controller->log(LogController::LogLevel::INFO, "ServerListenerController - Accepted connection from [" + std::string(inet_ntoa(address.sin_addr)) + "]");
+        this->log_controller->log(LogController::LogLevel::INFO,
+                                  "ServerListenerController - Accepted connection from [" +
+                                  std::string(inet_ntoa(address.sin_addr)) + "]");
 
         std::shared_ptr<SessionModel> session = std::make_shared<SessionModel>();
         session->socketfd = client_socket;
 
-        // Lock the sessions mutex and add the new session
-        this->sessions->sessions_mutex.lock();
 
-        // Make sure that the server has capacity for new connections
-        if (this->sessions->sessions.size() >= this->configuration_model->max_players) {
-            this->log_controller->log(LogController::LogLevel::INFO, "ServerListenerController - Server is full, closing connection from [" + std::string(inet_ntoa(address.sin_addr)) + "]");
-
-            // Send a message to the client that the server is full
+        try {
+            this->sessions_controller->addSession(session);
+        } catch (std::runtime_error &e) {
+            this->log_controller->log(LogController::LogLevel::ERROR,
+                                      "ServerListenerController - " + std::string(e.what()) + " dropping connection from [" +
+                                        std::string(inet_ntoa(address.sin_addr)) + "]");
             std::string message = SERVER_FULL_MESSAGE;
             message += "\n";
-            send(session->socketfd, message.c_str(), strlen(message.c_str()), 0);
-
-            // Close the connection
-            close(session->socketfd);
-        } else {
-            this->sessions->sessions.insert(std::pair<int, std::shared_ptr<SessionModel>>(client_socket, session));
+            send(client_socket, message.c_str(), message.size(), 0);
+            close(client_socket);
+            continue;
         }
-
-        // Unlock the sessions mutex
-        this->sessions->sessions_mutex.unlock();
     }
 }
 

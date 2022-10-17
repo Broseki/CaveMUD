@@ -25,7 +25,7 @@ ServerSocketController::ServerSocketController(ServerSocketModel* serverSocketMo
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(config->game_port);
     if (bind(this->server_socket_model->socketfd, (struct sockaddr *) &address, sizeof(address)) < 0) {
-        this->log_controller->log(log_controller->FATAL, "Error binding socket to port" + std::to_string(config->game_port));
+        this->log_controller->log(log_controller->FATAL, "Error binding socket to port " + std::to_string(config->game_port));
         exit(EXIT_FAILURE);
     }
 

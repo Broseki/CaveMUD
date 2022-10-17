@@ -11,6 +11,7 @@
 #include "../Models/SessionModel.h"
 #include "../Models/ServerSocketModel.h"
 #include "../Models/SessionsModel.h"
+#include "SessionsController.h"
 
 class ServerListenerController {
 public:
@@ -27,6 +28,7 @@ private:
     ServerSocketModel *server_socket_model;
     ConfigurationModel *configuration_model;
     SessionsModel *sessions;
+    SessionsController *sessions_controller;
     bool stopped;
 
 };
