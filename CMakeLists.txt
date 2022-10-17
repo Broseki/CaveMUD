@@ -25,13 +25,10 @@ enable_testing()
 add_executable(
         CaveMUD
         main.h main.cpp
-        Models/ConfigurationModel.cpp Models/ConfigurationModel.h
-        Controllers/ConfigurationController.cpp Controllers/ConfigurationController.h
-        Controllers/LogController.cpp Controllers/LogController.h
-        Models/SessionModel.h
-        Controllers/ServerListenerController.cpp Controllers/ServerListenerController.h
-        Models/ServerSocketModel.h
-        Models/SessionsModel.h Controllers/ServerSocketController.cpp Controllers/ServerSocketController.h Controllers/SessionController.cpp Controllers/SessionController.h Controllers/SessionsController.cpp Controllers/SessionsController.h)
+        Utils/Configuration/Configuration.cpp Utils/Configuration/Configuration.h
+        Utils/Logger/Logger.cpp Utils/Logger/Logger.h
+        Networking/Server/ServerListener.cpp Networking/Server/ServerListener.h
+        Networking/Server/ServerSocket.cpp Networking/Server/ServerSocket.h Session/Session.cpp Session/Session.h Session/Sessions.cpp Session/Sessions.h)
 
 target_link_libraries(
         CaveMUD

@@ -1,14 +1,20 @@
-/**
- * Representation of the server configuration file.
- */
+//
+// Created by Travis Canning on 10/14/22.
+//
 
-#ifndef CAVEMUD_CONFIGURATIONMODEL_H
-#define CAVEMUD_CONFIGURATIONMODEL_H
+#ifndef CAVEMUD_CONFIGURATION_H
+#define CAVEMUD_CONFIGURATION_H
 
-#include <cstdint>
 #include <string>
 
-class ConfigurationModel {
+class Configuration {
+
+public:
+    Configuration(std::string configuration_file_path);
+
+    // String representation of the configuration model
+    std::string toString() const;
+
 public:
     // Thread settings
     uint32_t connection_establishment_handler_thread_count;
@@ -26,9 +32,7 @@ public:
 
     // Development Settings
     std::string log_level;
-
-    // String representation of the configuration model
-    std::string toString() const;
 };
 
-#endif //CAVEMUD_CONFIGURATIONMODEL_H
+
+#endif //CAVEMUD_CONFIGURATION_H

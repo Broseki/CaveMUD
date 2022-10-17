@@ -2,17 +2,17 @@
 // Created by Travis Canning on 10/14/22.
 //
 
-#include "LogController.h"
+#include "Logger.h"
 
 #include <chrono>
 #include <iostream>
 
-LogController::LogController(std::ostream *output_stream, LogLevel log_level) {
+Logger::Logger(std::ostream *output_stream, LogLevel log_level) {
     this->log_level = log_level;
     this->output_stream = output_stream;
 }
 
-std::string LogController::log_level_to_string(LogLevel log_level) {
+std::string Logger::log_level_to_string(LogLevel log_level) {
     switch (log_level) {
         case DEBUG:
             return "DEBUG";
@@ -29,7 +29,7 @@ std::string LogController::log_level_to_string(LogLevel log_level) {
     }
 }
 
-LogController::LogLevel LogController::string_to_log_level(std::string log_level_string) {
+Logger::LogLevel Logger::string_to_log_level(std::string log_level_string) {
     // Convert the string to uppercase
     std::transform(log_level_string.begin(), log_level_string.end(), log_level_string.begin(), ::toupper);
 
@@ -48,7 +48,7 @@ LogController::LogLevel LogController::string_to_log_level(std::string log_level
     }
 }
 
-void LogController::log(LogLevel log_level, std::string message) {
+void Logger::log(LogLevel log_level, std::string message) {
     // Lock the log mutex safely (RAII)
     const std::lock_guard<std::mutex> lock(log_mutex);
 

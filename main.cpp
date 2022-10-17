@@ -1,11 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include "Models/ConfigurationModel.h"
-#include "Controllers/ConfigurationController.h"
-#include "Controllers/LogController.h"
-#include "Controllers/ServerListenerController.h"
-#include "Controllers/ServerSocketController.h"
+#include "Utils/Configuration/Configuration.h"
+#include "Utils/Logger/Logger.h"
+#include "Networking/Server/ServerListener.h"
+#include "Networking/Server/ServerSocket.h"
 
 int main(int argc, char** argv) {
     std::cout << "+-------------------------------------+" << std::endl;
@@ -16,37 +15,30 @@ int main(int argc, char** argv) {
 
     // Load settings from config file passed in as an argument
     // If no argument is passed, load default config file (config.json)
-    ConfigurationController configuration_controller = ConfigurationController();
-    ConfigurationModel configuration_model;
-    if (argc == 2) {
-        configuration_model = configuration_controller.getConfiguration(argv[1]);
-    } else if (argc == 1) {
-        // Load default config file
-        configuration_model = configuration_controller.getConfiguration("config.json");
-    } else {
+    if (argc > 2) {
         std::cout << "Usage: " << argv[0] << " [config_file]" << std::endl;
         return 1;
     }
+    Configuration configuration = Configuration(argc == 2 ? argv[1] : "config.json");
 
     // Create a log controller
-    LogController log_controller = LogController(&std::cout, log_controller.string_to_log_level(configuration_model.log_level));
-    log_controller.log(log_controller.INFO, "Logger initialized... Starting server...");
+    Logger logger = Logger(&std::cout, logger.string_to_log_level(configuration.log_level));
+    logger.log(logger.INFO, "Logger initialized... Starting server...");
 
     // Print the configuration model
-    log_controller.log(log_controller.DEBUG, configuration_model.toString());
+    logger.log(logger.DEBUG, configuration.toString());
 
     // Initialize a vector of threads to track all the threads we create
     std::vector<std::thread> threads;
 
     // Initialize the main server socket
-    ServerSocketModel server_socket_model = ServerSocketModel();
-    ServerSocketController server_socket_controller = ServerSocketController(&server_socket_model, &configuration_model, &log_controller);
+    ServerSocket server_socket = ServerSocket(&configuration, &logger);
 
     // Start the client socket handler threads
-    SessionsModel server_sessions_model = SessionsModel();
-    for (int i = 0; i < configuration_model.connection_establishment_handler_thread_count; i++) {
-        ServerListenerController server_listener_controller = ServerListenerController(&log_controller, &server_socket_model, &configuration_model, &server_sessions_model);
-        threads.push_back(std::thread(&ServerListenerController::start, &server_listener_controller));
+    Sessions sessions = Sessions(&configuration, &logger);
+    for (int i = 0; i < configuration.connection_establishment_handler_thread_count; i++) {
+        ServerListener server_listener = ServerListener(&logger, &server_socket, &configuration, &sessions);
+        threads.push_back(std::thread(&ServerListener::start, &server_listener));
     }
 
     // Start the master game loop threads

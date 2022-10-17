@@ -2,13 +2,13 @@
 // Created by Travis Canning on 10/14/22.
 //
 
-#ifndef CAVEMUD_LOGCONTROLLER_H
-#define CAVEMUD_LOGCONTROLLER_H
+#ifndef CAVEMUD_LOGGER_H
+#define CAVEMUD_LOGGER_H
 
 #include <string>
 #include <mutex>
 
-class LogController {
+class Logger {
 private:
     std::ostream *output_stream;
 
@@ -21,7 +21,7 @@ public:
         FATAL
     };
 
-    LogController(std::ostream* output_stream, LogLevel log_level);
+    Logger(std::ostream* output_stream, LogLevel log_level);
     void log(LogLevel log_level, std::string message);
 
 private:
@@ -34,4 +34,4 @@ public:
 };
 
 
-#endif //CAVEMUD_LOGCONTROLLER_H
+#endif //CAVEMUD_LOGGER_H
