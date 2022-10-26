@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <sys/fcntl.h>
 #include "ServerListener.h"
 
 #define SERVER_FULL_MESSAGE "Server is full. Please try again later."
@@ -40,6 +41,22 @@ void ServerListener::start() {
         struct sockaddr_in address;
         socklen_t address_length = sizeof(address);
         int client_socket = accept(this->server_socket->get_socketfd(), (struct sockaddr *) &address, &address_length);
+
+        // Set the socket to non-blocking
+        int flags = fcntl(client_socket, F_GETFL, 0);
+        if (flags < 0) {
+            this->logger->log(Logger::LogLevel::ERROR,
+                                      "ServerListener::start() - Error getting socket flags");
+            close(client_socket);
+            return;
+        }
+        if (fcntl(client_socket, F_SETFL, flags | O_NONBLOCK) < 0) {
+            this->logger->log(Logger::LogLevel::ERROR,
+                                      "ServerListener::start() - Error setting socket to non-blocking");
+            close(client_socket);
+            return;
+        }
+
         if (client_socket < 0) {
             this->logger->log(Logger::LogLevel::ERROR,
                                       "ServerListener::start() - Error accepting connection");
@@ -67,6 +84,8 @@ void ServerListener::start() {
             close(client_socket);
             continue;
         }
+
+        logger->log(logger->DEBUG, "Setup session, now there are " + std::to_string(this->sessions->getNumSessions()) + " sessions");
     }
 }
 

@@ -11,6 +11,10 @@ Sessions::Sessions(Configuration *config, Logger *logger) {
     this->logger = logger;
 }
 
+Sessions::~Sessions() {
+    logger->log(logger->INFO, "Destroying Sessions object");
+}
+
 void Sessions::addSession(std::shared_ptr<Session> session) {
     // Lock the sessions mutex safely (RAII)
     const std::lock_guard<std::mutex> lock(this->sessions_mutex);
@@ -48,8 +52,12 @@ std::vector<std::shared_ptr<Session>> Sessions::getSessions(uint32_t offset, uin
     std::vector<std::shared_ptr<Session>> sessions_to_return;
 
     // Iterate through sessions on the offset and add them to the vector
-    for (uint32_t i = offset; i < sessions.size(); i += step) {
-        sessions_to_return.push_back(sessions[i]);
+    logger->log(logger->DEBUG, "Sessions::getSessions() - offset: " + std::to_string(offset) + " step: " + std::to_string(step));
+    logger->log(logger->DEBUG, "Sessions::getSessions() - sessions.size(): " + std::to_string(sessions.size()));
+    for (auto it = sessions.begin(); it != sessions.end(); it++) {
+        if (it->first % step == offset) {
+            sessions_to_return.push_back(it->second);
+        }
     }
 
     // Return the vector of sessions

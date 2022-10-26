@@ -7,6 +7,7 @@
 #include "Networking/Server/ServerSocket.h"
 #include "Engine/MasterClock.h"
 #include "Session/SessionHandler.h"
+#include "Engine/GameLoop.h"
 
 int main(int argc, char** argv) {
     std::cout << "+-------------------------------------+" << std::endl;
@@ -51,6 +52,12 @@ int main(int argc, char** argv) {
     for (int i = 0; i < configuration.player_session_socket_handler_thread_count; i++) {
         threads.emplace_back(std::thread(&SessionHandler::start, new SessionHandler(&logger, &configuration, &master_clock, &sessions, i)));
     }
+
+    // Start game loop threads
+    for (int i = 0; i < configuration.game_loop_thread_count; i++) {
+        threads.emplace_back(std::thread(&GameLoop::start, new GameLoop(&logger, &configuration, &master_clock, &sessions, i)));
+    }
+
 
     // Join threads
     for (auto& thread : threads) {

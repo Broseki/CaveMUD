@@ -34,6 +34,7 @@ ServerSocket::ServerSocket(Configuration *config, Logger *logger) {
 }
 
 ServerSocket::~ServerSocket() {
+    logger->log(logger->INFO, "Destroying ServerSocket");
     this->socket_mutex.lock();
     close(this->socketfd);
     this->socketfd = -1;

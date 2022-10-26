@@ -14,6 +14,7 @@
 class Sessions {
 public:
     Sessions(Configuration *config, Logger *logger);
+    ~Sessions();
     void addSession(std::shared_ptr<Session> session);
     void removeSession(int sessionId);
     uint32_t getNumSessions();

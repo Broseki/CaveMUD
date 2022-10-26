@@ -15,7 +15,6 @@ int Session::get_socketfd() {
 std::vector<char8_t> Session::get_input_buffer() {
     const std::lock_guard<std::mutex> lock(this->input_buffer_mutex);
 
-    this->input_buffer.clear();
     return this->input_buffer;
 }
 
@@ -34,7 +33,6 @@ void Session::clear_input_buffer() {
 std::vector<char8_t> Session::get_output_buffer() {
     const std::lock_guard<std::mutex> lock(this->output_buffer_mutex);
 
-    this->output_buffer.clear();
     return this->output_buffer;
 }
 

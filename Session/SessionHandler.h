@@ -27,6 +27,7 @@ private:
 
 public:
     SessionHandler(Logger *logger, Configuration *configuration, MasterClock *master_clock, Sessions *sessions, uint32_t thread_id);
+    ~SessionHandler();
 
     void start();
     void stop();

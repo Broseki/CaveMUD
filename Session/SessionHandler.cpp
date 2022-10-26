@@ -14,21 +14,26 @@ SessionHandler::SessionHandler(Logger *logger, Configuration *configuration, Mas
     this->stopped = false;
 }
 
+SessionHandler::~SessionHandler() {
+    logger->log(logger->INFO, "Destroying SessionHandler ID " + std::to_string(this->thread_id));
+    stop();
+}
+
 void SessionHandler::rx(const std::shared_ptr<Session>& session) {
     // Receive data from the session
-    std::vector<char8_t> input_buffer(configuration->socket_buffer_size);
-    int result = recv(session->get_socketfd(), input_buffer.data(), input_buffer.size(), 0);
+    std::vector<char8_t> temp_input_buffer(configuration->socket_buffer_size);
+    int result = recv(session->get_socketfd(), temp_input_buffer.data(), temp_input_buffer.size(), 0);
 
     if (result == 0) {
         // The client has disconnected
         logger->log(logger->DEBUG, "Client disconnected");
         sessions->removeSession(session->get_socketfd());
-    } else if (result < 0) {
+    } else if (result < 0 && errno != EWOULDBLOCK) {
         // An error occurred
         logger->log(logger->ERROR, "Error receiving data from client");
         sessions->removeSession(session->get_socketfd());
-    } else {
-        // Set the input buffer
+    } else if (result > 0) {
+        std::vector<char8_t> input_buffer(temp_input_buffer.begin(), temp_input_buffer.begin() + result);
         session->set_input_buffer(input_buffer);
     }
 }

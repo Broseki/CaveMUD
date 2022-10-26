@@ -1,8 +1,8 @@
 {
   "thread_settings": {
-    "connection_establishment_handler_thread_count": 1,
-    "player_session_socket_handler_thread_count": 1,
-    "game_loop_thread_count": 1
+    "connection_establishment_handler_thread_count": 10,
+    "player_session_socket_handler_thread_count": 10,
+    "game_loop_thread_count": 10
   },
   "networking_settings": {
     "game_port": 12345,
@@ -10,11 +10,11 @@
     "socket_buffer_size": 5000
   },
   "game_settings": {
-    "max_players": 1,
+    "max_players": 100,
     "world_id": 1,
     "tick_rate": 1
   },
   "system_settings": {
-    "log_level": "debug"
+    "log_level": "info"
   }
 }
