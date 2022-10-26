@@ -24,6 +24,7 @@ public:
     // Networking settings
     uint16_t game_port;
     int connection_queue_size;
+    uint32_t socket_buffer_size;
 
     // Game settings
     uint32_t max_players;

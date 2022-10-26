@@ -35,9 +35,9 @@ private:
 public:
     MasterClock(Logger *logger, uint32_t sessionControllerThreads, uint32_t engineThreads);
 
-    std::mutex *getSessionControllerModeMutex();
-    std::mutex *getEngineModeMutex();
-    std::mutex *getReadyMutex();
+    void waitOnSessionControllerModeMutex();
+    void waitOnEngineModeMutex();
+    void waitOnReadyMutex();
 
     void readyCallback();
     void doneCallback();

@@ -5,6 +5,8 @@
 #include "Utils/Logger/Logger.h"
 #include "Networking/Server/ServerListener.h"
 #include "Networking/Server/ServerSocket.h"
+#include "Engine/MasterClock.h"
+#include "Session/SessionHandler.h"
 
 int main(int argc, char** argv) {
     std::cout << "+-------------------------------------+" << std::endl;
@@ -36,15 +38,19 @@ int main(int argc, char** argv) {
 
     // Start the client socket handler threads
     Sessions sessions = Sessions(&configuration, &logger);
+
+    // Create server listener threads
     for (int i = 0; i < configuration.connection_establishment_handler_thread_count; i++) {
-        ServerListener server_listener = ServerListener(&logger, &server_socket, &configuration, &sessions);
-        threads.push_back(std::thread(&ServerListener::start, &server_listener));
+        threads.emplace_back(std::thread(&ServerListener::start, new ServerListener(&logger, &server_socket, &configuration, &sessions)));
     }
 
     // Setup Master Clock
-
+    MasterClock master_clock = MasterClock(&logger, configuration.player_session_socket_handler_thread_count, configuration.game_loop_thread_count);
 
     // Start session handler threads
+    for (int i = 0; i < configuration.player_session_socket_handler_thread_count; i++) {
+        threads.emplace_back(std::thread(&SessionHandler::start, new SessionHandler(&logger, &configuration, &master_clock, &sessions, i)));
+    }
 
     // Join threads
     for (auto& thread : threads) {

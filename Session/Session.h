@@ -16,9 +16,11 @@ public:
 
     std::vector<char8_t> get_input_buffer();
     void set_input_buffer(std::vector<char8_t> arg_input_buffer);
+    void clear_input_buffer();
 
     std::vector<char8_t> get_output_buffer();
     void set_output_buffer(std::vector<char8_t> arg_output_buffer);
+    void clear_output_buffer();
 
 private:
     // Data

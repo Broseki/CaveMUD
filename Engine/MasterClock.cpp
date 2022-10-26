@@ -19,23 +19,26 @@ MasterClock::MasterClock(Logger *logger, uint32_t sessionControllerThreads, uint
     // Start in session controller mode
     this->currentMode = SESSION_CONTROLLER;
 
-    // Lock both mode mutexes to start
-    this->sessionControllerModeMutex.lock();
+    // Lock necessary thread controller mutexes to start
     this->engineModeMutex.lock();
+    this->readyMutex.lock();
 
     logger->log(logger->DEBUG, "MasterClock initialized.");
 }
 
-std::mutex *MasterClock::getSessionControllerModeMutex() {
-    return &sessionControllerModeMutex;
+void MasterClock::waitOnSessionControllerModeMutex() {
+    logger->log(logger->DEBUG, "Waiting on session controller mode mutex");
+    const std::lock_guard<std::mutex> lock(this->sessionControllerModeMutex);
 }
 
-std::mutex *MasterClock::getEngineModeMutex() {
-    return &engineModeMutex;
+void MasterClock::waitOnEngineModeMutex() {
+    logger->log(logger->DEBUG, "Waiting on engine mode mutex");
+    const std::lock_guard<std::mutex> lock(this->engineModeMutex);
 }
 
-std::mutex *MasterClock::getReadyMutex() {
-    return &readyMutex;
+void MasterClock::waitOnReadyMutex() {
+    logger->log(logger->DEBUG, "Waiting on ready mutex");
+    const std::lock_guard<std::mutex> lock(this->readyMutex);
 }
 
 void MasterClock::readyCallback() {

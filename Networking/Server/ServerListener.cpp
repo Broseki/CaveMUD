@@ -23,6 +23,7 @@ ServerListener::ServerListener(Logger *logger,
 }
 
 ServerListener::~ServerListener() {
+    logger->log(logger->INFO, "Destroying ServerListener");
     this->stop();
 }
 
@@ -70,5 +71,5 @@ void ServerListener::start() {
 }
 
 void ServerListener::stop() {
-
+    this->stopped = true;
 }
