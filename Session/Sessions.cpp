@@ -28,12 +28,14 @@ void Sessions::addSession(std::shared_ptr<Session> session) {
     sessions[session->get_socketfd()] = session;
 }
 
-void Sessions::removeSession(int sessionId) {
+void Sessions::removeSession(int sessionId, bool closeSocket) {
     // Lock the sessions mutex safely (RAII)
     const std::lock_guard<std::mutex> lock(this->sessions_mutex);
 
-    // Close the socket
-    close(sessions[sessionId]->get_socketfd());
+    // Close the socket if requested
+    if (closeSocket) {
+        close(sessions[sessionId]->get_socketfd());
+    }
 
     // Remove the session from the sessions map
     sessions.erase(sessionId);
@@ -52,8 +54,6 @@ std::vector<std::shared_ptr<Session>> Sessions::getSessions(uint32_t offset, uin
     std::vector<std::shared_ptr<Session>> sessions_to_return;
 
     // Iterate through sessions on the offset and add them to the vector
-    logger->log(logger->DEBUG, "Sessions::getSessions() - offset: " + std::to_string(offset) + " step: " + std::to_string(step));
-    logger->log(logger->DEBUG, "Sessions::getSessions() - sessions.size(): " + std::to_string(sessions.size()));
     for (auto it = sessions.begin(); it != sessions.end(); it++) {
         if (it->first % step == offset) {
             sessions_to_return.push_back(it->second);

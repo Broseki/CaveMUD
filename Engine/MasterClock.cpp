@@ -27,25 +27,20 @@ MasterClock::MasterClock(Logger *logger, uint32_t sessionControllerThreads, uint
 }
 
 void MasterClock::waitOnSessionControllerModeMutex() {
-    logger->log(logger->DEBUG, "Waiting on session controller mode mutex");
     const std::lock_guard<std::mutex> lock(this->sessionControllerModeMutex);
 }
 
 void MasterClock::waitOnEngineModeMutex() {
-    logger->log(logger->DEBUG, "Waiting on engine mode mutex");
     const std::lock_guard<std::mutex> lock(this->engineModeMutex);
 }
 
 void MasterClock::waitOnReadyMutex() {
-    logger->log(logger->DEBUG, "Waiting on ready mutex");
     const std::lock_guard<std::mutex> lock(this->readyMutex);
 }
 
 void MasterClock::readyCallback() {
     const std::lock_guard<std::mutex> lock(this->callbackMutex);
     callbackCounter++;
-
-    logger->log(logger->DEBUG, "MasterClock readyCallback() callbackCounter: " + std::to_string(callbackCounter));
 
     switch(currentMode) {
         case SESSION_CONTROLLER:
@@ -65,8 +60,6 @@ void MasterClock::doneCallback() {
     const std::lock_guard<std::mutex> lock(this->callbackMutex);
     callbackCounter++;
 
-    logger->log(logger->DEBUG, "MasterClock doneCallback() callbackCounter: " + std::to_string(callbackCounter));
-
     switch(currentMode) {
         case SESSION_CONTROLLER:
             if (callbackCounter >= sessionControllerThreads) {
@@ -82,8 +75,6 @@ void MasterClock::doneCallback() {
 }
 
 void MasterClock::switchModes() {
-    logger->log(logger->DEBUG, "MasterClock switchModes()");
-
     // Reset callback counter
     callbackCounter = 0;
 
@@ -111,13 +102,9 @@ void MasterClock::switchModes() {
     }
 
     // Now we wait for ready, the allReady() function will handle things from here
-
-    logger->log(logger->DEBUG, "MasterClock switchModes() complete");
 }
 
 void MasterClock::allReady() {
-    logger->log(logger->DEBUG, "MasterClock allReady()");
-
     // Reset callback counter
     callbackCounter = 0;
 

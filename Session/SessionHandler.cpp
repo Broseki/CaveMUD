@@ -26,14 +26,15 @@ void SessionHandler::rx(const std::shared_ptr<Session>& session) {
 
     if (result == 0) {
         // The client has disconnected
-        logger->log(logger->DEBUG, "Client disconnected");
-        sessions->removeSession(session->get_socketfd());
+        logger->log(logger->INFO, "Client disconnected [ " + std::to_string(session->get_socketfd()) + " ]");
+        sessions->removeSession(session->get_socketfd(), false);
     } else if (result < 0 && errno != EWOULDBLOCK) {
         // An error occurred
         logger->log(logger->ERROR, "Error receiving data from client");
-        sessions->removeSession(session->get_socketfd());
+        sessions->removeSession(session->get_socketfd(), false);
     } else if (result > 0) {
         std::vector<char8_t> input_buffer(temp_input_buffer.begin(), temp_input_buffer.begin() + result);
+        logger->log(logger->DEBUG, "[SessionHandler # " + std::to_string(thread_id) + "] Received: " + std::string(input_buffer.begin(), input_buffer.begin() + input_buffer.size()));
         session->set_input_buffer(input_buffer);
     }
 }
@@ -46,7 +47,7 @@ void SessionHandler::tx(const std::shared_ptr<Session>& session) {
     if (result < 0) {
         // An error occurred
         logger->log(logger->ERROR, "Error sending data to client");
-        sessions->removeSession(session->get_socketfd());
+        sessions->removeSession(session->get_socketfd(), false);
     } else {
         // Clear the output buffer
         session->clear_output_buffer();
@@ -59,12 +60,8 @@ void SessionHandler::start() {
         master_clock->readyCallback();
         master_clock->waitOnReadyMutex();
 
-        logger->log(logger->DEBUG, "SessionHandler " + std::to_string(thread_id) + " is running");
-
         // Get the sessions that we are responsible for
         const std::vector<std::shared_ptr<Session>> my_sessions = this->sessions->getSessions(thread_id, configuration->player_session_socket_handler_thread_count);
-
-        logger->log(logger->DEBUG, "Session handler thread " + std::to_string(thread_id) + " handling " + std::to_string(my_sessions.size()) + " sessions");
 
         // Receive and transmit data for each session
         for (const auto& session : my_sessions) {

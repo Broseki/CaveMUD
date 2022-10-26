@@ -45,7 +45,7 @@ void GameLoop::stop() {
 void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
     std::vector<char8_t> buffer = session->get_input_buffer();
     if(buffer.size() > 0) {
-        logger->log(logger->INFO, "Received: " + std::string(buffer.begin(), buffer.begin() + buffer.size()));
+        logger->log(logger->INFO, "[GameLoop # " + std::to_string(thread_id) + "] Received: " + std::string(buffer.begin(), buffer.begin() + buffer.size()));
     }
     session->set_output_buffer(session->get_input_buffer());
 

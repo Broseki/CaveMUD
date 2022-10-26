@@ -15,6 +15,6 @@
     "tick_rate": 1
   },
   "system_settings": {
-    "log_level": "info"
+    "log_level": "debug"
   }
 }

@@ -16,7 +16,7 @@ public:
     Sessions(Configuration *config, Logger *logger);
     ~Sessions();
     void addSession(std::shared_ptr<Session> session);
-    void removeSession(int sessionId);
+    void removeSession(int sessionId, bool closeSocket);
     uint32_t getNumSessions();
     std::vector<std::shared_ptr<Session>> getSessions(uint32_t offset, uint32_t step);
 

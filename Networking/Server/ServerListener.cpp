@@ -14,7 +14,6 @@ ServerListener::ServerListener(Logger *logger,
                                ServerSocket *server_socket,
                                Configuration *config,
                                Sessions *sessions) {
-    logger->log(Logger::LogLevel::DEBUG, "ServerListener::ServerListener()");
     this->logger = logger;
     this->server_socket = server_socket;
     this->config = config;
