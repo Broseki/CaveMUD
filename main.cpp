@@ -41,7 +41,10 @@ int main(int argc, char** argv) {
         threads.push_back(std::thread(&ServerListener::start, &server_listener));
     }
 
-    // Start the master game loop threads
+    // Setup Master Clock
+
+
+    // Start session handler threads
 
     // Join threads
     for (auto& thread : threads) {
