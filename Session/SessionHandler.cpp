@@ -27,10 +27,10 @@ void SessionHandler::rx(const std::shared_ptr<Session>& session) {
     if (result == 0) {
         // The client has disconnected
         logger->log(logger->INFO, "Client disconnected [ " + std::to_string(session->get_socketfd()) + " ]");
-        sessions->removeSession(session->get_socketfd(), false);
+        sessions->removeSession(session->get_socketfd(), true);
     } else if (result < 0 && errno != EWOULDBLOCK) {
         // An error occurred
-        logger->log(logger->ERROR, "Error receiving data from client");
+        logger->log(logger->INFO, "Error receiving data from client [ " + std::to_string(session->get_socketfd()) + " ]");
         sessions->removeSession(session->get_socketfd(), false);
     } else if (result > 0) {
         std::vector<char8_t> input_buffer;
@@ -53,7 +53,7 @@ void SessionHandler::tx(const std::shared_ptr<Session>& session) {
 
     if (result < 0) {
         // An error occurred
-        logger->log(logger->ERROR, "Error sending data to client");
+        logger->log(logger->INFO, "Error sending data to client [ " + std::to_string(session->get_socketfd()) + " ]");
         sessions->removeSession(session->get_socketfd(), false);
     } else {
         // Clear the output buffer
