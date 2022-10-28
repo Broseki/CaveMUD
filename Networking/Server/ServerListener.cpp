@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <sys/fcntl.h>
+#include <netinet/tcp.h>
 #include "ServerListener.h"
 
 #define SERVER_FULL_MESSAGE "Server is full. Please try again later."
@@ -42,18 +43,19 @@ void ServerListener::start() {
         int client_socket = accept(this->server_socket->get_socketfd(), (struct sockaddr *) &address, &address_length);
 
         // Set the socket to non-blocking
-        int flags = fcntl(client_socket, F_GETFL, 0);
-        if (flags < 0) {
-            this->logger->log(Logger::LogLevel::ERROR,
-                                      "ServerListener::start() - Error getting socket flags");
-            close(client_socket);
-            return;
-        }
-        if (fcntl(client_socket, F_SETFL, flags | O_NONBLOCK) < 0) {
+        if (!this->setSocketNonBlocking(client_socket)) {
             this->logger->log(Logger::LogLevel::ERROR,
                                       "ServerListener::start() - Error setting socket to non-blocking");
-            close(client_socket);
-            return;
+            this->server_socket->get_socketfd_mutex()->unlock();
+            continue;
+        }
+
+        // Enable keep-alive on the socket
+        if (!this->setSocketKeepAlive(client_socket)) {
+            this->logger->log(Logger::LogLevel::ERROR,
+                                      "ServerListener::start() - Error setting socket to keep-alive");
+            this->server_socket->get_socketfd_mutex()->unlock();
+            continue;
         }
 
         if (client_socket < 0) {
@@ -90,4 +92,53 @@ void ServerListener::start() {
 
 void ServerListener::stop() {
     this->stopped = true;
+}
+
+bool ServerListener::setSocketNonBlocking(int socket) {
+    int flags = fcntl(socket, F_GETFL, 0);
+    if (flags < 0) {
+        this->logger->log(Logger::LogLevel::ERROR,
+                          "ServerListener::start() - Error getting socket flags");
+        close(socket);
+        return false;
+    }
+    if (fcntl(socket, F_SETFL, flags | O_NONBLOCK) < 0) {
+        this->logger->log(Logger::LogLevel::ERROR,
+                          "ServerListener::start() - Error setting socket to non-blocking");
+        close(socket);
+        return false;
+    }
+    return true;
+}
+
+bool ServerListener::setSocketKeepAlive(int socket) {
+    int optval = 1;
+    if (setsockopt(socket, SOL_SOCKET, SO_KEEPALIVE, &optval, sizeof(optval)) < 0) {
+        this->logger->log(Logger::LogLevel::ERROR,
+                          "ServerListener::start() - Error setting socket to keep-alive");
+        close(socket);
+        return false;
+    }
+
+    //set the keepalive options
+    int rc;
+    rc = setsockopt(socket, IPPROTO_TCP, TCP_KEEPCNT, &tcpKeepAliveConfig.keepcnt, sizeof(tcpKeepAliveConfig.keepcnt));
+    if (rc != 0) {
+        close(socket);
+        return false;
+    }
+
+    rc = setsockopt(socket, IPPROTO_TCP, TCP_KEEPALIVE, &tcpKeepAliveConfig.keepidle, sizeof(tcpKeepAliveConfig.keepidle));
+    if (rc != 0) {
+        close(socket);
+        return false;
+    }
+
+    rc = setsockopt(socket, IPPROTO_TCP, TCP_KEEPINTVL, &tcpKeepAliveConfig.keepintvl, sizeof(tcpKeepAliveConfig.keepintvl));
+    if (rc != 0) {
+        close(socket);
+        return false;
+    }
+
+    return true;
 }

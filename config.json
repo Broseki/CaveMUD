@@ -7,7 +7,7 @@
   "networking_settings": {
     "game_port": 12345,
     "connection_queue_size": 5,
-    "socket_buffer_size": 5000
+    "socket_buffer_size": 1000
   },
   "game_settings": {
     "max_players": 100,

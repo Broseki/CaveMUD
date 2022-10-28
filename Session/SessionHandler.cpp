@@ -33,7 +33,14 @@ void SessionHandler::rx(const std::shared_ptr<Session>& session) {
         logger->log(logger->ERROR, "Error receiving data from client");
         sessions->removeSession(session->get_socketfd(), false);
     } else if (result > 0) {
-        std::vector<char8_t> input_buffer(temp_input_buffer.begin(), temp_input_buffer.begin() + result);
+        std::vector<char8_t> input_buffer;
+        while (result > 0) {
+            // Append the received data to the input buffer
+            input_buffer.insert(input_buffer.end(), temp_input_buffer.begin(), temp_input_buffer.begin() + result);
+
+            // Receive more data
+            result = recv(session->get_socketfd(), temp_input_buffer.data(), temp_input_buffer.size(), 0);
+        }
         logger->log(logger->DEBUG, "[SessionHandler # " + std::to_string(thread_id) + "] Received: " + std::string(input_buffer.begin(), input_buffer.begin() + input_buffer.size()));
         session->set_input_buffer(input_buffer);
     }
