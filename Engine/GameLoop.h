@@ -20,6 +20,10 @@ private:
     bool stopped;
     uint32_t thread_id;
 
+    // Static global variables (for all game loops)
+    static std::mutex global_kv_mutex;
+    static std::unordered_map<std::string, void *> global_kv_store;
+
     void handleSession(const std::shared_ptr<Session>& session);
 
 public:
@@ -28,6 +32,20 @@ public:
 
     void start();
     void stop();
+
+    // Static methods for global variables
+    static void set_global(std::string key, void *value) {
+        std::lock_guard<std::mutex> lock(global_kv_mutex);
+        global_kv_store[key] = value;
+    }
+    static void *get_global(std::string key) {
+        std::lock_guard<std::mutex> lock(global_kv_mutex);
+        return global_kv_store[key];
+    }
+    static void remove_global(std::string key) {
+        std::lock_guard<std::mutex> lock(global_kv_mutex);
+        global_kv_store.erase(key);
+    }
 };
 
 

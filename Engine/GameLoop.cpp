@@ -26,9 +26,8 @@ void GameLoop::start() {
         master_clock->readyCallback();
         master_clock->waitOnReadyMutex();
 
-        // Do game loop stuff (for now just echo back the input)
+        // Handle each of the sessions that this thread is responsible for
         std::vector<std::shared_ptr<Session>> my_sessions = sessions->getSessions(thread_id, configuration->game_loop_thread_count);
-
         for (const auto& session : my_sessions) {
             handleSession(session);
         }
@@ -43,12 +42,7 @@ void GameLoop::stop() {
 }
 
 void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
-    std::vector<char8_t> buffer = session->get_input_buffer();
-    if(buffer.size() > 0) {
-        logger->log(logger->INFO, "[GameLoop # " + std::to_string(thread_id) + "] Received: " + std::string(buffer.begin(), buffer.begin() + buffer.size()));
-    }
-    session->set_output_buffer(session->get_input_buffer());
+    logger->log(logger->DEBUG, "Game loop # " + std::to_string(thread_id) + " handling session # " + std::to_string(session->get_socketfd()));
 
-    // Clear the input buffer since we are done with it
-    session->clear_input_buffer();
+    // Run the state machines
 }
