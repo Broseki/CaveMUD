@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
         threads.emplace_back(std::thread(&GameLoop::start, new GameLoop(&logger, &configuration, &master_clock, &sessions, i)));
     }
 
+    logger.log(logger.INFO, "Server started successfully!");
 
     // Join threads
     for (auto& thread : threads) {
