@@ -68,13 +68,13 @@ std::vector<StateMachine *> Session::get_state_machines() {
     return this->activeStateMachines;
 }
 
-void Session::set_kv(std::string key, void *value) {
+void Session::set_kv(std::string key, std::shared_ptr<boost::any> value) {
     const std::lock_guard<std::mutex> lock(this->kv_store_mutex);
 
     this->kv_store[key] = value;
 }
 
-void *Session::get_kv(std::string key) {
+std::shared_ptr<boost::any> Session::get_kv(std::string key) {
     const std::lock_guard<std::mutex> lock(this->kv_store_mutex);
 
     return this->kv_store[key];

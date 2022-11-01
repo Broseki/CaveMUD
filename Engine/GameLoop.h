@@ -5,6 +5,7 @@
 #ifndef CAVEMUD_GAMELOOP_H
 #define CAVEMUD_GAMELOOP_H
 
+#include <boost/any.hpp>
 
 #include "../Utils/Logger/Logger.h"
 #include "../Utils/Configuration/Configuration.h"
@@ -22,7 +23,7 @@ private:
 
     // Static global variables (for all game loops)
     static std::mutex global_kv_mutex;
-    static std::unordered_map<std::string, void *> global_kv_store;
+    static std::unordered_map<std::string, std::shared_ptr<boost::any>> global_kv_store;
 
     void handleSession(const std::shared_ptr<Session>& session);
 
@@ -34,11 +35,11 @@ public:
     void stop();
 
     // Static methods for global variables
-    static void set_global(std::string key, void *value) {
+    static void set_global(std::string key, std::shared_ptr<boost::any> value) {
         std::lock_guard<std::mutex> lock(global_kv_mutex);
-        global_kv_store[key] = value;
+        global_kv_store[key] = std::move(value);
     }
-    static void *get_global(std::string key) {
+    static std::shared_ptr<boost::any> get_global(std::string key) {
         std::lock_guard<std::mutex> lock(global_kv_mutex);
         return global_kv_store[key];
     }
