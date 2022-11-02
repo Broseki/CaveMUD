@@ -5,11 +5,17 @@
 #ifndef CAVEMUD_VIEW_H
 #define CAVEMUD_VIEW_H
 
+#include "../../Session/Session.h"
+#include "../../Utils/Logger/Logger.h"
+
+class Session;
+
 class View {
 private:
 
 public:
-    virtual void in() = 0;
+    virtual void handle_input(Logger* logger, std::shared_ptr<Session> session) = 0;
+    virtual void render(Logger* logger, std::shared_ptr<Session> session) = 0;
 };
 
 #endif //CAVEMUD_VIEW_H

@@ -11,8 +11,10 @@
 #include <boost/any.hpp>
 
 #include "../Engine/StateMachines/StateMachine.h"
+#include "../Engine/Views/View.h"
 
 class StateMachine;
+class View;
 
 class Session {
 public:
@@ -30,14 +32,18 @@ public:
     void set_output_buffer(std::vector<char8_t> arg_output_buffer);
     void clear_output_buffer();
 
-    void add_state_machine(StateMachine *state_machine);
-    void remove_state_machine(StateMachine *state_machine);
-    std::vector<StateMachine*> get_state_machines();
+    void add_state_machine(std::shared_ptr<StateMachine> state_machine);
+    void remove_state_machine(std::shared_ptr<StateMachine> state_machine);
+    std::vector<std::shared_ptr<StateMachine>> get_state_machines();
 
     // Logic for session key/value pairs
-    void set_kv(std::string key, std::shared_ptr<boost::any> value);
-    std::shared_ptr<boost::any> get_kv(std::string key);
+    void set_kv(std::string key, boost::any value);
+    boost::any get_kv(std::string key);
     void remove_kv(std::string key);
+
+    // View set/get logic
+    void set_view(std::shared_ptr<View> view);
+    std::shared_ptr<View> get_view();
 
 private:
     // Data
@@ -50,12 +56,16 @@ private:
     std::mutex output_buffer_mutex;
     std::mutex state_machine_mutex;
     std::mutex kv_store_mutex;
+    std::mutex view_mutex;
 
     // State machines running on this session
-    std::vector<StateMachine*> activeStateMachines;
+    std::vector<std::shared_ptr<StateMachine>> activeStateMachines;
 
     // Key/value store for session
-    std::unordered_map<std::string, std::shared_ptr<boost::any>> kv_store;
+    std::unordered_map<std::string, boost::any> kv_store;
+
+    // Current view
+    std::shared_ptr<View> current_view;
 };
 
 

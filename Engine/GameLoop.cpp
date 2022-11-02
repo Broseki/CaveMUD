@@ -3,7 +3,10 @@
 //
 
 #include "GameLoop.h"
-#include "../Session/Sessions.h"
+#include "Views/View.h"
+#include "Views/EchoView.h"
+#include "StateMachines/StateMachine.h"
+#include "StateMachines/Echo.h"
 
 GameLoop::GameLoop(Logger *logger, Configuration *configuration, MasterClock *master_clock, Sessions *sessions, uint32_t thread_id) {
     this->logger = logger;
@@ -42,7 +45,27 @@ void GameLoop::stop() {
 }
 
 void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
-    logger->log(logger->DEBUG, "Game loop # " + std::to_string(thread_id) + " handling session # " + std::to_string(session->get_socketfd()));
+    //logger->log(logger->DEBUG, "Game loop # " + std::to_string(thread_id) + " handling session # " + std::to_string(session->get_socketfd()));
 
-    // Run the state machines
+    // If no view is set, set the default view
+    if (session->get_view() == nullptr) {
+        session->set_view(std::make_shared<EchoView>());
+        session->add_state_machine(std::make_shared<Echo>());
+    }
+
+    // Handle input
+    if (session->get_view() != nullptr) {
+        session->get_view()->handle_input(logger, session);
+    }
+
+    // Run State Machines (if any)
+    for (const auto& state_machine : session->get_state_machines()) {
+        state_machine->step(logger, session);
+    }
+
+
+    // Render
+    if (session->get_view() != nullptr) {
+        session->get_view()->render(logger, session);
+    }
 }

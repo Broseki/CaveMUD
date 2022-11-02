@@ -12,8 +12,8 @@
 
 class Echo: public StateMachine {
 public:
-    static void step(std::shared_ptr<Session> session);
-    static void reset(std::shared_ptr<Session> session);
+    void step(Logger* logger, std::shared_ptr<Session> session) override;
+    void reset(Logger* logger, std::shared_ptr<Session> session) override;
 };
 
 

@@ -6,14 +6,15 @@
 #define CAVEMUD_STATEMACHINE_H
 
 #include "../../Session/Session.h"
+#include "../../Utils/Logger/Logger.h"
 
 // Pre-declare due to circular dependency circular dependency
 class Session;
 
 class StateMachine {
 public:
-    static void step(std::shared_ptr<Session> session);
-    static void reset(std::shared_ptr<Session> session);
+    virtual void step(Logger* logger, std::shared_ptr<Session> session) = 0;
+    virtual void reset(Logger* logger, std::shared_ptr<Session> session) = 0;
 };
 
 #endif //CAVEMUD_STATEMACHINE_H

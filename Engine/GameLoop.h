@@ -23,7 +23,7 @@ private:
 
     // Static global variables (for all game loops)
     static std::mutex global_kv_mutex;
-    static std::unordered_map<std::string, std::shared_ptr<boost::any>> global_kv_store;
+    static std::unordered_map<std::string, boost::any> global_kv_store;
 
     void handleSession(const std::shared_ptr<Session>& session);
 
@@ -35,11 +35,11 @@ public:
     void stop();
 
     // Static methods for global variables
-    static void set_global(std::string key, std::shared_ptr<boost::any> value) {
+    static void set_global(std::string key, boost::any value) {
         std::lock_guard<std::mutex> lock(global_kv_mutex);
-        global_kv_store[key] = std::move(value);
+        global_kv_store[key] = value;
     }
-    static std::shared_ptr<boost::any> get_global(std::string key) {
+    static boost::any get_global(std::string key) {
         std::lock_guard<std::mutex> lock(global_kv_mutex);
         return global_kv_store[key];
     }
