@@ -7,11 +7,13 @@
 
 #include "StateMachine.h"
 
+#define MACHINE_NAME "Echo"
 #define ECHO_IN_VAR "echo_in"
 #define ECHO_OUT_VAR "echo_out"
 
 class Echo: public StateMachine {
 public:
+    Echo(): StateMachine(MACHINE_NAME) {}
     void step(Logger* logger, std::shared_ptr<Session> session) override;
     void reset(Logger* logger, std::shared_ptr<Session> session) override;
 };

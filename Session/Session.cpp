@@ -2,6 +2,7 @@
 // Created by Travis Canning on 10/16/22.
 //
 
+#include <iostream>
 #include "Session.h"
 
 Session::Session(int socketfd) {
@@ -52,6 +53,10 @@ void Session::add_state_machine(std::shared_ptr<StateMachine> state_machine) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
 
     this->activeStateMachines.push_back(state_machine);
+
+    for (auto machine: this->activeStateMachines) {
+        std::cout << "Machine: " << machine->get_machine_name() << std::endl;
+    }
 }
 
 void Session::remove_state_machine(std::shared_ptr<StateMachine> state_machine) {
@@ -92,4 +97,14 @@ void Session::set_view(std::shared_ptr<View> view) {
 std::shared_ptr<View> Session::get_view() {
     const std::lock_guard<std::mutex> lock(this->view_mutex);
     return this->current_view;
+}
+
+void Session::remove_state_machine(std::string machine_name) {
+    const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
+
+    for (auto machine: this->activeStateMachines) {
+        if (machine->get_machine_name() == machine_name) {
+            this->activeStateMachines.erase(std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), machine), this->activeStateMachines.end());
+        }
+    }
 }

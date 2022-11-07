@@ -5,10 +5,7 @@
 #include "EchoView.h"
 #include "../StateMachines/Echo.h"
 
-class Echo;
-
 void EchoView::render(Logger* logger, std::shared_ptr<Session> session) {
-    Echo echo;
     boost::any echo_out_var = session->get_kv(ECHO_OUT_VAR);
     if (!echo_out_var.empty()) {
         std::string output = boost::any_cast<std::string>(session->get_kv(ECHO_OUT_VAR));

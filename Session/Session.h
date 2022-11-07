@@ -34,6 +34,7 @@ public:
 
     void add_state_machine(std::shared_ptr<StateMachine> state_machine);
     void remove_state_machine(std::shared_ptr<StateMachine> state_machine);
+    void remove_state_machine(std::string machine_name);
     std::vector<std::shared_ptr<StateMachine>> get_state_machines();
 
     // Logic for session key/value pairs

@@ -5,7 +5,6 @@
 #include "Echo.h"
 
 void Echo::step(Logger* logger, std::shared_ptr<Session> session) {
-    //logger->log(logger->INFO, "Echo::step");
     boost::any echo_in_var = session->get_kv(ECHO_IN_VAR);
     if (!echo_in_var.empty()) {
         std::string input = boost::any_cast<std::string>(session->get_kv(ECHO_IN_VAR));
