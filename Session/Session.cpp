@@ -53,10 +53,6 @@ void Session::add_state_machine(std::shared_ptr<StateMachine> state_machine) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
 
     this->activeStateMachines.push_back(state_machine);
-
-    for (auto machine: this->activeStateMachines) {
-        std::cout << "Machine: " << machine->get_machine_name() << std::endl;
-    }
 }
 
 void Session::remove_state_machine(std::shared_ptr<StateMachine> state_machine) {

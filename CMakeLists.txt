@@ -47,7 +47,7 @@ add_executable(
         Engine/Telnet/TelnetConstants.h
         Engine/Views/View.h
         Engine/StateMachines/StateMachine.h
-        Engine/StateMachines/Echo.cpp Engine/StateMachines/Echo.h Engine/Views/EchoView.cpp Engine/Views/EchoView.h)
+        Engine/StateMachines/Echo.cpp Engine/StateMachines/Echo.h Engine/Views/EchoView.cpp Engine/Views/EchoView.h Engine/Telnet/TelnetController.cpp Engine/Telnet/TelnetController.h)
 
 target_link_libraries(
         CaveMUD
