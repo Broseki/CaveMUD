@@ -28,7 +28,7 @@ enum CommandCode {
 };
 
 // String representations of the command codes
-static const std::unordered_map<CommandCode, std::string> command_code_map = {
+static const std::unordered_map<CommandCode, std::string> command_code_string_map = {
         {SE, "SE"},
         {NOP, "NOP"},
         {DATAMARK, "DATAMARK"},
@@ -87,7 +87,7 @@ enum OptionCode {
 };
 
 // String representations of the option codes
-static const std::unordered_map<OptionCode, std::string> option_code_map = {
+static const std::unordered_map<OptionCode, std::string> option_code_string_map = {
         {BINARY_TRANSMISSION, "BINARY_TRANSMISSION"},
         {ECHO, "ECHO"},
         {RECONNECTION, "RECONNECTION"},
