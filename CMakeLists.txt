@@ -7,11 +7,6 @@ set(BOOST_INCLUDE_LIBRARIES thread filesystem system program_options)
 set(BOOST_ENABLE_CMAKE ON)
 
 include(FetchContent)
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG release-1.12.1
-)
 
 FetchContent_Declare(
         json
@@ -26,7 +21,6 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(
-        googletest
         json
         Boost)
 
@@ -47,10 +41,12 @@ add_executable(
         Engine/Telnet/TelnetConstants.h
         Engine/Views/View.h
         Engine/StateMachines/StateMachine.h
-        Engine/StateMachines/Echo.cpp Engine/StateMachines/Echo.h Engine/Views/EchoView.cpp Engine/Views/EchoView.h Engine/Telnet/TelnetController.cpp Engine/Telnet/TelnetController.h Engine/Telnet/Handlers/TelnetCommandHandler.h Engine/Telnet/Handlers/HandlerMap.h)
+        Engine/StateMachines/Echo.cpp Engine/StateMachines/Echo.h
+        Engine/Views/EchoView.cpp Engine/Views/EchoView.h
+        Engine/Telnet/TelnetController.cpp Engine/Telnet/TelnetController.h
+        Engine/Telnet/Handlers/OptionHandlers/TelnetOptionHandler.h Engine/Telnet/Handlers/CommandHandlers/TelnetCommandHandler.h)
 
 target_link_libraries(
         CaveMUD
-        gtest_main
         nlohmann_json::nlohmann_json
         Boost::any)
