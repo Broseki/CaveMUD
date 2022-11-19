@@ -44,7 +44,7 @@ add_executable(
         Engine/StateMachines/Echo.cpp Engine/StateMachines/Echo.h
         Engine/Views/EchoView.cpp Engine/Views/EchoView.h
         Engine/Telnet/TelnetController.cpp Engine/Telnet/TelnetController.h
-        Engine/Telnet/Handlers/OptionHandlers/TelnetOptionHandler.h Engine/Telnet/Handlers/CommandHandlers/TelnetCommandHandler.h)
+        Engine/Telnet/Handlers/OptionHandlers/TelnetOptionHandler.h Engine/Telnet/Handlers/CommandHandlers/TelnetCommandHandler.h Engine/Telnet/Handlers/CommandHandlers/CommandRouter.cpp Engine/Telnet/Handlers/CommandHandlers/CommandRouter.h Engine/Telnet/Handlers/OptionHandlers/OptionRouter.cpp Engine/Telnet/Handlers/OptionHandlers/OptionRouter.h Engine/Telnet/Handlers/CommandHandlers/AreYouThere.cpp Engine/Telnet/Handlers/CommandHandlers/AreYouThere.h Session/KV_Keys.h)
 
 target_link_libraries(
         CaveMUD

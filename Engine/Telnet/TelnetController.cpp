@@ -4,6 +4,7 @@
 
 #include "TelnetController.h"
 #include "../../Utils/Configuration/Configuration.h"
+#include "Handlers/CommandHandlers/CommandRouter.h"
 
 void TelnetController::handleCommands(Logger *logger, Configuration* config, std::shared_ptr<Session> session) {
     std::vector<char8_t> input_buffer = session->get_input_buffer();
@@ -77,6 +78,7 @@ uint32_t TelnetController::handleCommand(Logger *logger, Configuration* config, 
     } else if (input_buffer.size() >= index + 2) {
         CommandCode command = static_cast<CommandCode>(input_buffer[index + 1]);
         logger->log(Logger::DEBUG, "Received command " + command_code_string_map.at(command));
+        CommandRouter::routeCommand(logger, config, session, command);
         return 2;
     }
     logger->log(Logger::WARNING, "Received unknown / incomplete command, ignoring");

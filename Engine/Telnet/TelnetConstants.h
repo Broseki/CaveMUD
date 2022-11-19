@@ -5,6 +5,9 @@
 #ifndef CAVEMUD_TELNETCONSTANTS_H
 #define CAVEMUD_TELNETCONSTANTS_H
 
+#include <string>
+#include <unordered_map>
+
 enum IAC {
     IAC = 255
 };
