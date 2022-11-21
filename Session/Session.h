@@ -45,7 +45,7 @@ public:
     void remove_kv(std::string key);
 
     // View set/get logic
-    void set_view(std::shared_ptr<View> view);
+    void set_view(Logger* logger, std::shared_ptr<View> view);
     std::shared_ptr<View> get_view();
 
 private:

@@ -49,8 +49,7 @@ void GameLoop::stop() {
 void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
     // If no view is set, set the default view
     if (session->get_view() == nullptr) {
-        session->set_view(std::make_shared<EchoView>());
-        session->add_state_machine(logger, std::make_shared<Echo>());
+        session->set_view(logger, std::make_shared<EchoView>());
     }
 
     // Handle any telnet commands that are in the received data stream

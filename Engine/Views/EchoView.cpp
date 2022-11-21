@@ -46,3 +46,20 @@ void EchoView::handle_input(Logger* logger, std::shared_ptr<Session> session) {
     session->set_kv(ECHO_IN_VAR, input);
     session->clear_input_buffer();
 }
+
+void EchoView::start(Logger *logger, Session* session) {
+    logger->log(logger->DEBUG, "Starting EchoView");
+
+    // Enable the echo state machine
+    session->add_state_machine(logger, std::make_shared<Echo>());
+}
+
+void EchoView::stop(Logger *logger, Session* session) {
+    logger->log(logger->DEBUG, "Stopping EchoView");
+
+    // Disable the echo state machine
+    session->remove_state_machine(logger, "Echo");
+
+    // Disable the reverse echo state machine
+    session->remove_state_machine(logger, "ReverseEcho");
+}

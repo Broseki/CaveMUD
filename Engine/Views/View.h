@@ -16,6 +16,8 @@ private:
 public:
     virtual void handle_input(Logger* logger, std::shared_ptr<Session> session) = 0;
     virtual void render(Logger* logger, std::shared_ptr<Session> session) = 0;
+    virtual void start(Logger* logger, Session* session) = 0;
+    virtual void stop(Logger* logger, Session* session) = 0;
 };
 
 #endif //CAVEMUD_VIEW_H

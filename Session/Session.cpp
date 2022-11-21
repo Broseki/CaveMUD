@@ -90,9 +90,15 @@ void Session::remove_kv(std::string key) {
     this->kv_store.erase(key);
 }
 
-void Session::set_view(std::shared_ptr<View> view) {
+void Session::set_view(Logger* logger, std::shared_ptr<View> view) {
     const std::lock_guard<std::mutex> lock(this->view_mutex);
+
+    if (this->current_view != nullptr) {
+        this->current_view->stop(logger, this);
+    }
+
     this->current_view = view;
+    this->current_view->start(logger, this);
 }
 
 std::shared_ptr<View> Session::get_view() {
