@@ -37,4 +37,6 @@ void ReverseEcho::stop(Logger *logger, Session *session) {
     logger->log(logger->DEBUG, "Stopping ReverseEcho");
 
     session->remove_kv(ECHO_TYPE_VAR);
+    session->remove_kv(ECHO_IN_VAR);
+    session->remove_kv(ECHO_OUT_VAR);
 }

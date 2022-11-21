@@ -8,14 +8,13 @@
 
 #include "StateMachine.h"
 
-#define MACHINE_NAME "ReverseEcho"
 #define ECHO_IN_VAR "echo_in"
 #define ECHO_OUT_VAR "echo_out"
 #define ECHO_TYPE_VAR "echo_type"
 
 class ReverseEcho: public StateMachine {
 public:
-    ReverseEcho(): StateMachine(MACHINE_NAME) {}
+    ReverseEcho(): StateMachine("ReverseEcho") {}
     void step(Logger* logger, std::shared_ptr<Session> session) override;
     void reset(Logger* logger, std::shared_ptr<Session> session) override;
     void start(Logger* logger, Session* session) override;

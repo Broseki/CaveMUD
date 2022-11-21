@@ -31,4 +31,6 @@ void Echo::stop(Logger *logger, Session *session) {
     logger->log(logger->DEBUG, "Stopping Echo");
 
     session->remove_kv(ECHO_TYPE_VAR);
+    session->remove_kv(ECHO_IN_VAR);
+    session->remove_kv(ECHO_OUT_VAR);
 }
