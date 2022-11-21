@@ -4,6 +4,7 @@
 
 #include "CommandRouter.h"
 #include "AreYouThere.h"
+#include "InterruptProcess.h"
 
 void CommandRouter::routeCommand(Logger *logger, Configuration *config, std::shared_ptr<Session> session,
                                  CommandCode command) {
@@ -17,12 +18,16 @@ void CommandRouter::routeCommand(Logger *logger, Configuration *config, std::sha
         case BREAK:
             break;
         case INTERRUPT_PROCESS:
+        {
+            InterruptProcess interruptProcess;
+            interruptProcess.handleCommand(logger, config, session);
+        }
             break;
         case ABORT_OUTPUT:
             break;
         case ARE_YOU_THERE:
         {
-            AreYouThere handler = AreYouThere();
+            AreYouThere handler;
             handler.handleCommand(logger, config, session);
         }
             break;

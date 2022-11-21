@@ -22,6 +22,8 @@ public:
 
     int get_socketfd();
 
+    void destroy();
+
     // Input buffer methods
     std::vector<char8_t> get_input_buffer();
     void set_input_buffer(std::vector<char8_t> arg_input_buffer);
@@ -32,9 +34,9 @@ public:
     void set_output_buffer(std::vector<char8_t> arg_output_buffer);
     void clear_output_buffer();
 
-    void add_state_machine(std::shared_ptr<StateMachine> state_machine);
-    void remove_state_machine(std::shared_ptr<StateMachine> state_machine);
-    void remove_state_machine(std::string machine_name);
+    void add_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine);
+    void remove_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine);
+    void remove_state_machine(Logger *logger, std::string machine_name);
     std::vector<std::shared_ptr<StateMachine>> get_state_machines();
 
     // Logic for session key/value pairs

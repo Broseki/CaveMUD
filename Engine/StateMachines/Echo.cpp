@@ -20,3 +20,15 @@ void Echo::reset(Logger* logger, std::shared_ptr<Session> session) {
     session->remove_kv(ECHO_IN_VAR);
     session->remove_kv(ECHO_OUT_VAR);
 }
+
+void Echo::start(Logger *logger, Session *session) {
+    logger->log(logger->DEBUG, "Starting Echo");
+
+    session->set_kv(ECHO_TYPE_VAR, std::string("Normal"));
+}
+
+void Echo::stop(Logger *logger, Session *session) {
+    logger->log(logger->DEBUG, "Stopping Echo");
+
+    session->remove_kv(ECHO_TYPE_VAR);
+}

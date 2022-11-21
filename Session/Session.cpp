@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "Session.h"
+#include "KV_Keys.h"
 
 Session::Session(int socketfd) {
     this->socketfd = socketfd;
@@ -49,14 +50,18 @@ void Session::clear_output_buffer() {
     this->output_buffer.clear();
 }
 
-void Session::add_state_machine(std::shared_ptr<StateMachine> state_machine) {
+void Session::add_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
+
+    state_machine->start(logger, this);
 
     this->activeStateMachines.push_back(state_machine);
 }
 
-void Session::remove_state_machine(std::shared_ptr<StateMachine> state_machine) {
+void Session::remove_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
+
+    state_machine->stop(logger, this);
 
     this->activeStateMachines.erase(std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), state_machine), this->activeStateMachines.end());
 }
@@ -95,12 +100,20 @@ std::shared_ptr<View> Session::get_view() {
     return this->current_view;
 }
 
-void Session::remove_state_machine(std::string machine_name) {
+void Session::remove_state_machine(Logger *logger, std::string machine_name) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
 
     for (auto machine: this->activeStateMachines) {
         if (machine->get_machine_name() == machine_name) {
+            machine->stop(logger, this);
             this->activeStateMachines.erase(std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), machine), this->activeStateMachines.end());
         }
     }
+}
+
+/**
+ * End the session (set the destroy flag, session handler will remove it from the session list)
+ */
+void Session::destroy() {
+    this->set_kv(SESSION_KV_DESTROY_FLAG, true);
 }

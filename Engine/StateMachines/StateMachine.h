@@ -23,6 +23,10 @@ public:
 
     virtual void reset(Logger* logger, std::shared_ptr<Session> session) = 0;
 
+    virtual void start(Logger* logger, Session* session) = 0;
+
+    virtual void stop(Logger* logger, Session* session) = 0;
+
     virtual const std::string get_machine_name() {
         return machine_name;
     }

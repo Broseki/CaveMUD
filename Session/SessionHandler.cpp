@@ -4,6 +4,7 @@
 
 #include <sys/socket.h>
 #include "SessionHandler.h"
+#include "KV_Keys.h"
 
 SessionHandler::SessionHandler(Logger *logger, Configuration *configuration, MasterClock *master_clock, Sessions *sessions, uint32_t thread_id) {
     this->logger = logger;
@@ -72,6 +73,12 @@ void SessionHandler::start() {
 
         // Receive and transmit data for each session
         for (const auto& session : my_sessions) {
+            // If the session has the destroy flag set, remove it
+            if(!session->get_kv(SESSION_KV_INTERRUPT_FLAG).empty() && boost::any_cast<bool>(session->get_kv(SESSION_KV_INTERRUPT_FLAG))) {
+                sessions->removeSession(session->get_socketfd(), true);
+                continue;
+            }
+
             rx(session);
             tx(session);
         }
