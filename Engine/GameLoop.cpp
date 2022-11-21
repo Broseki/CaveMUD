@@ -62,7 +62,6 @@ void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
 
     // Run State Machines (if any)
     for (const auto& state_machine : session->get_state_machines()) {
-        //logger->log(logger->DEBUG, "[GameLoop # " + std::to_string(thread_id) + "] Running State Machine: " + state_machine->get_machine_name());
         state_machine->step(logger, session);
     }
 

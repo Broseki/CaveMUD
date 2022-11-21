@@ -9,6 +9,11 @@
 #include <netinet/tcp.h>
 #include "ServerListener.h"
 
+// Fix for Mac OS X
+#ifdef __MACH__
+#define TCP_KEEPIDLE TCP_KEEPALIVE
+#endif
+
 #define SERVER_FULL_MESSAGE "Server is full. Please try again later."
 
 ServerListener::ServerListener(Logger *logger,
@@ -128,7 +133,7 @@ bool ServerListener::setSocketKeepAlive(int socket) {
         return false;
     }
 
-    rc = setsockopt(socket, IPPROTO_TCP, TCP_KEEPALIVE, &tcpKeepAliveConfig.keepidle, sizeof(tcpKeepAliveConfig.keepidle));
+    rc = setsockopt(socket, IPPROTO_TCP, TCP_KEEPIDLE, &tcpKeepAliveConfig.keepidle, sizeof(tcpKeepAliveConfig.keepidle));
     if (rc != 0) {
         close(socket);
         return false;

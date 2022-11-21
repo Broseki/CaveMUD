@@ -5,6 +5,7 @@
 #include "Logger.h"
 
 #include <chrono>
+#include <cstring>
 #include <iostream>
 
 Logger::Logger(std::ostream *output_stream, LogLevel log_level) {
