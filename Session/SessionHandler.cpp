@@ -50,6 +50,25 @@ void SessionHandler::rx(const std::shared_ptr<Session>& session) {
 void SessionHandler::tx(const std::shared_ptr<Session>& session) {
     // Send data to the session
     std::vector<char8_t> output_buffer = session->get_output_buffer();
+
+    // Prepend the prepend command buffer to the start of the output buffer
+    boost::any prepend_command_buffer = session->get_kv(SESSION_KV_COMMAND_PREPEND_BUFFER);
+    if (!prepend_command_buffer.empty()) {
+        logger->log(logger->DEBUG, "[SessionHandler # " + std::to_string(thread_id) + "] Prepending command buffer to output buffer");
+        std::vector<char8_t> prepend_command_buffer_vector = boost::any_cast<std::vector<char8_t>>(prepend_command_buffer);
+        output_buffer.insert(output_buffer.begin(), prepend_command_buffer_vector.begin(), prepend_command_buffer_vector.end());
+        session->remove_kv(SESSION_KV_COMMAND_PREPEND_BUFFER);
+    }
+
+    // Append the append command buffer to the end of the output buffer
+    boost::any append_command_buffer = session->get_kv(SESSION_KV_COMMAND_APPEND_BUFFER);
+    if (!append_command_buffer.empty()) {
+        logger->log(logger->DEBUG, "[SessionHandler # " + std::to_string(thread_id) + "] Appending command buffer to output buffer");
+        std::vector<char8_t> append_command_buffer_vector = boost::any_cast<std::vector<char8_t>>(append_command_buffer);
+        output_buffer.insert(output_buffer.begin(), append_command_buffer_vector.begin(), append_command_buffer_vector.end());
+        session->remove_kv(SESSION_KV_COMMAND_APPEND_BUFFER);
+    }
+
     int result = send(session->get_socketfd(), output_buffer.data(), output_buffer.size(), 0);
 
     if (result < 0) {
