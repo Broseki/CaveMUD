@@ -34,15 +34,15 @@ public:
     void set_output_buffer(std::vector<char8_t> arg_output_buffer);
     void clear_output_buffer();
 
-    void add_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine);
-    void remove_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine);
-    void remove_state_machine(Logger *logger, std::string machine_name);
+    void add_state_machine(Logger *logger, const std::shared_ptr<StateMachine>& state_machine);
+    void remove_state_machine(Logger *logger, const std::shared_ptr<StateMachine>& state_machine);
+    void remove_state_machine(Logger *logger, const std::string& machine_name);
     std::vector<std::shared_ptr<StateMachine>> get_state_machines();
 
     // Logic for session key/value pairs
-    void set_kv(std::string key, boost::any value);
-    boost::any get_kv(std::string key);
-    void remove_kv(std::string key);
+    void set_kv(const std::string& key, boost::any value);
+    boost::any get_kv(const std::string& key);
+    void remove_kv(const std::string& key);
 
     // View set/get logic
     void set_view(Logger* logger, std::shared_ptr<View> view);

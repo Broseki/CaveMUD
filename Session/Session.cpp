@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <utility>
 #include "Session.h"
 #include "KV_Keys.h"
 
@@ -23,7 +24,7 @@ std::vector<char8_t> Session::get_input_buffer() {
 void Session::set_input_buffer(std::vector<char8_t> arg_input_buffer) {
     const std::lock_guard<std::mutex> lock(this->input_buffer_mutex);
 
-    this->input_buffer = arg_input_buffer;
+    this->input_buffer = std::move(arg_input_buffer);
 }
 
 void Session::clear_input_buffer() {
@@ -41,7 +42,7 @@ std::vector<char8_t> Session::get_output_buffer() {
 void Session::set_output_buffer(std::vector<char8_t> arg_output_buffer) {
     const std::lock_guard<std::mutex> lock(this->output_buffer_mutex);
 
-    this->output_buffer = arg_output_buffer;
+    this->output_buffer = std::move(arg_output_buffer);
 }
 
 void Session::clear_output_buffer() {
@@ -50,7 +51,7 @@ void Session::clear_output_buffer() {
     this->output_buffer.clear();
 }
 
-void Session::add_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine) {
+void Session::add_state_machine(Logger *logger, const std::shared_ptr<StateMachine>& state_machine) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
 
     state_machine->start(logger, this);
@@ -58,7 +59,7 @@ void Session::add_state_machine(Logger *logger, std::shared_ptr<StateMachine> st
     this->activeStateMachines.push_back(state_machine);
 }
 
-void Session::remove_state_machine(Logger *logger, std::shared_ptr<StateMachine> state_machine) {
+void Session::remove_state_machine(Logger *logger, const std::shared_ptr<StateMachine>& state_machine) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
 
     state_machine->stop(logger, this);
@@ -72,19 +73,19 @@ std::vector<std::shared_ptr<StateMachine>> Session::get_state_machines() {
     return this->activeStateMachines;
 }
 
-void Session::set_kv(std::string key, boost::any value) {
+void Session::set_kv(const std::string& key, boost::any value) {
     const std::lock_guard<std::mutex> lock(this->kv_store_mutex);
 
     this->kv_store[key] = value;
 }
 
-boost::any Session::get_kv(std::string key) {
+boost::any Session::get_kv(const std::string& key) {
     const std::lock_guard<std::mutex> lock(this->kv_store_mutex);
 
     return this->kv_store[key];
 }
 
-void Session::remove_kv(std::string key) {
+void Session::remove_kv(const std::string& key) {
     const std::lock_guard<std::mutex> lock(this->kv_store_mutex);
 
     this->kv_store.erase(key);
@@ -97,7 +98,7 @@ void Session::set_view(Logger* logger, std::shared_ptr<View> view) {
         this->current_view->stop(logger, this);
     }
 
-    this->current_view = view;
+    this->current_view = std::move(view);
     this->current_view->start(logger, this);
 }
 
@@ -106,10 +107,10 @@ std::shared_ptr<View> Session::get_view() {
     return this->current_view;
 }
 
-void Session::remove_state_machine(Logger *logger, std::string machine_name) {
+void Session::remove_state_machine(Logger *logger, const std::string& machine_name) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
 
-    for (auto machine: this->activeStateMachines) {
+    for (const auto& machine: this->activeStateMachines) {
         if (machine->get_machine_name() == machine_name) {
             machine->stop(logger, this);
             this->activeStateMachines.erase(std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), machine), this->activeStateMachines.end());
