@@ -11,8 +11,8 @@ class View;
 
 class EchoView: public View {
 public:
-    void render(Logger* logger, std::shared_ptr<Session> session) override;
-    void handle_input(Logger* logger, std::shared_ptr<Session> session) override;
+    void render(Logger* logger, Session* session) override;
+    void handle_input(Logger* logger, Session* session) override;
     void start(Logger* logger, Session* session) override;
     void stop(Logger* logger, Session* session) override;
 };

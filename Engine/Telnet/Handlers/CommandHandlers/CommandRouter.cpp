@@ -6,7 +6,7 @@
 #include "AreYouThere.h"
 #include "InterruptProcess.h"
 
-void CommandRouter::routeCommand(Logger *logger, Configuration *config, std::shared_ptr<Session> session,
+void CommandRouter::routeCommand(Logger *logger, Configuration *config, Session* session,
                                  CommandCode command) {
     switch (command) {
         case SE:

@@ -5,7 +5,7 @@
 #include "AreYouThere.h"
 #include "../../../../Session/KV_Keys.h"
 
-void AreYouThere::handleCommand(Logger *logger, Configuration *config, std::shared_ptr<Session> session) {
+void AreYouThere::handleCommand(Logger *logger, Configuration *config, Session* session) {
     logger->log(Logger::DEBUG, "AreYouThere::handleCommand");
     session->set_kv(SESSION_KV_AYT_FLAG, true);
 }

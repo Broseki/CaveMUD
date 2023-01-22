@@ -9,7 +9,7 @@
 
 class AreYouThere: public TelnetCommandHandler {
 public:
-    void handleCommand(Logger* logger, Configuration* config, std::shared_ptr<Session> session) override;
+    void handleCommand(Logger* logger, Configuration* config, Session* session) override;
 };
 
 

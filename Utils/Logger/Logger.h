@@ -10,7 +10,7 @@
 
 class Logger {
 private:
-    std::ostream *output_stream;
+    std::ostream *m_output_stream;
 
 public:
     enum LogLevel {
@@ -25,8 +25,8 @@ public:
     void log(LogLevel log_level, std::string message);
 
 private:
-    LogLevel log_level;
-    std::mutex log_mutex;
+    LogLevel m_log_level;
+    std::mutex m_log_mutex;
 
 public:
     static std::string log_level_to_string(LogLevel log_level);

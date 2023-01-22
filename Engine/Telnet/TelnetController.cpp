@@ -8,7 +8,7 @@
 #include "../../Session/KV_Keys.h"
 #include "Handlers/OptionHandlers/OptionRouter.h"
 
-void TelnetController::handleCommands(Logger *logger, Configuration* config, std::shared_ptr<Session> session) {
+void TelnetController::handleCommands(Logger *logger, Configuration* config, Session* session) {
     std::vector<char8_t> input_buffer = session->get_input_buffer();
 
     // Loop through the input buffer, and handle each command that we find
@@ -41,7 +41,7 @@ std::vector<char8_t> TelnetController::constructCommand(CommandCode command, Opt
     return command_buffer;
 }
 
-uint32_t TelnetController::handleCommand(Logger *logger, Configuration* config, const std::shared_ptr<Session>& session, const std::vector<char8_t>& input_buffer,
+uint32_t TelnetController::handleCommand(Logger *logger, Configuration* config, Session* session, const std::vector<char8_t>& input_buffer,
                                 uint32_t index) {
     logger->log(Logger::DEBUG, "Handling command at index " + std::to_string(index));
 
@@ -96,8 +96,7 @@ uint32_t TelnetController::handleCommand(Logger *logger, Configuration* config, 
     return 1;
 }
 
-void TelnetController::addToCommandAppendBuffer(Logger *logger, const std::shared_ptr<Session> &session,
-                                                std::vector<char8_t> bytes) {
+void TelnetController::addToCommandAppendBuffer(Logger *logger, Session* session, std::vector<char8_t> bytes) {
     logger->log(Logger::DEBUG, "Adding " + std::to_string(bytes.size()) + " bytes to command append buffer");
     if (session->get_kv(SESSION_KV_COMMAND_APPEND_BUFFER).empty()) {
         session->set_kv(SESSION_KV_COMMAND_APPEND_BUFFER, bytes);
@@ -108,8 +107,7 @@ void TelnetController::addToCommandAppendBuffer(Logger *logger, const std::share
     }
 }
 
-void TelnetController::addToCommandPrependBuffer(Logger *logger, const std::shared_ptr<Session> &session,
-                                                 std::vector<char8_t> bytes) {
+void TelnetController::addToCommandPrependBuffer(Logger *logger, Session* session, std::vector<char8_t> bytes) {
     logger->log(Logger::DEBUG, "Adding " + std::to_string(bytes.size()) + " bytes to command append buffer");
     if (session->get_kv(SESSION_KV_COMMAND_PREPEND_BUFFER).empty()) {
         session->set_kv(SESSION_KV_COMMAND_PREPEND_BUFFER, bytes);

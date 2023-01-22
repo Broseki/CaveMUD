@@ -53,11 +53,11 @@ void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
     }
 
     // Handle any telnet commands that are in the received data stream
-    TelnetController::handleCommands(logger, this->configuration, session);
+    TelnetController::handleCommands(logger, this->configuration, session.get());
 
     // Handle input
     if (session->get_view() != nullptr) {
-        session->get_view()->handle_input(logger, session);
+        session->get_view()->handle_input(logger, session.get());
     }
 
     // Run State Machines (if any)
@@ -67,6 +67,6 @@ void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
 
     // Render
     if (session->get_view() != nullptr) {
-        session->get_view()->render(logger, session);
+        session->get_view()->render(logger, session.get());
     }
 }

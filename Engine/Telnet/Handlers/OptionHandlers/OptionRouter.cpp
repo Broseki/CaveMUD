@@ -5,11 +5,19 @@
 #include "OptionRouter.h"
 
 
-void OptionRouter::routeOption(Logger *logger, Configuration *config, std::shared_ptr<Session> session, CommandCode command,
+void OptionRouter::routeOption(Logger *logger, Configuration *config, Session* session, CommandCode command,
                           OptionCode option, const std::vector<char8_t> &sb_data) {
     logger->log(Logger::DEBUG, "Routing option: " + std::to_string(option) + " with command: " + std::to_string(command));
     OptionRouter router;
-    TelnetOptionHandler *handler = router.optionHandlers.at(option).get();
+
+    // Get the handler for the telnet option
+    TelnetOptionHandler *handler;
+    try {
+        handler = router.optionHandlers.at(option).get();
+    } catch (std::out_of_range &e) {
+        handler = nullptr;
+    }
+
     if (handler == nullptr) {
         logger->log(Logger::ERROR, "No handler for option " + option_code_string_map.at(option));
         return;

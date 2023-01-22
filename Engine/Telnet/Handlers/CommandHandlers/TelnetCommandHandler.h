@@ -12,7 +12,7 @@
 
 class TelnetCommandHandler {
 public:
-    virtual void handleCommand(Logger* logger, Configuration* config, std::shared_ptr<Session> session) = 0;
+    virtual void handleCommand(Logger* logger, Configuration* config, Session* session) = 0;
 };
 
 

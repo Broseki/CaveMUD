@@ -9,7 +9,7 @@
 
 #define ECHO_TYPE_VAR "echo_type"
 
-void EchoView::render(Logger* logger, std::shared_ptr<Session> session) {
+void EchoView::render(Logger* logger, Session* session) {
     boost::any echo_out_var = session->get_kv(ECHO_OUT_VAR);
     if (!echo_out_var.empty()) {
         std::string output = boost::any_cast<std::string>(session->get_kv(ECHO_OUT_VAR));
@@ -28,9 +28,11 @@ void EchoView::render(Logger* logger, std::shared_ptr<Session> session) {
         if (!session->get_kv(ECHO_TYPE_VAR).empty() && boost::any_cast<std::string>(session->get_kv(ECHO_TYPE_VAR)) == "Reverse") {
             session->remove_state_machine(logger, "ReverseEcho");
             session->add_state_machine(logger, std::make_shared<Echo>());
+            this->set_line_mode(logger, session);
         } else {
             session->remove_state_machine(logger, "Echo");
             session->add_state_machine(logger, std::make_shared<ReverseEcho>());
+            this->set_char_mode(logger, session);
         }
     }
 
@@ -40,7 +42,7 @@ void EchoView::render(Logger* logger, std::shared_ptr<Session> session) {
     }
 }
 
-void EchoView::handle_input(Logger* logger, std::shared_ptr<Session> session) {
+void EchoView::handle_input(Logger* logger, Session* session) {
     std::vector<char8_t> input_buffer = session->get_input_buffer();
     std::string input(input_buffer.begin(), input_buffer.end());
     session->set_kv(ECHO_IN_VAR, input);

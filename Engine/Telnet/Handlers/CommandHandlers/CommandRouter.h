@@ -16,7 +16,7 @@ private:
     std::map<unsigned char, std::shared_ptr<TelnetCommandHandler>> commandHandlers = {};
 
 public:
-    static void routeCommand(Logger* logger, Configuration* config, std::shared_ptr<Session> session, CommandCode command);
+    static void routeCommand(Logger* logger, Configuration* config, Session* session, CommandCode command);
 };
 
 
