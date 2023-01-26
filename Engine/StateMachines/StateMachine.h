@@ -8,16 +8,18 @@
 #include "../../Session/Session.h"
 #include "../../Utils/Logger/Logger.h"
 
-// Pre-declare due to circular dependency circular dependency
+// Pre-declare due to circular dependency
 class Session;
 
 class StateMachine {
 private:
-    std::string machine_name;
+    const std::string machine_name;
+    // Flag to indicate if the machine is meant to have any stop logic
+    const bool m_steppable;
 public:
-    StateMachine(std::string machine_name) {
-        this->machine_name = machine_name;
-    }
+    StateMachine(std::string machine_name);
+
+    StateMachine(std::string machine_name, bool steppable);
 
     virtual void step(Logger* logger, std::shared_ptr<Session> session) = 0;
 
@@ -27,8 +29,12 @@ public:
 
     virtual void stop(Logger* logger, Session* session) = 0;
 
-    virtual const std::string get_machine_name() {
+    virtual std::string get_machine_name() {
         return machine_name;
+    }
+
+    virtual bool is_steppable() {
+        return m_steppable;
     }
 };
 

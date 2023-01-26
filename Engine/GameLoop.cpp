@@ -62,7 +62,9 @@ void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
 
     // Run State Machines (if any)
     for (const auto& state_machine : session->get_state_machines()) {
-        state_machine->step(logger, session);
+        if (state_machine->is_steppable()) {
+            state_machine->step(logger, session);
+        }
     }
 
     // Render
