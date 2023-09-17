@@ -5,6 +5,7 @@
 #ifndef CAVEMUD_GAMELOOP_H
 #define CAVEMUD_GAMELOOP_H
 
+#define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/any.hpp>
 
 #include "../Utils/Logger/Logger.h"

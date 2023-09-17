@@ -8,6 +8,7 @@
 #include <vector>
 #include <mutex>
 #include <unordered_map>
+#define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/any.hpp>
 
 #include "../Engine/StateMachines/StateMachine.h"
