@@ -3,12 +3,8 @@
 //
 
 #include "GameLoop.h"
-#include "Views/View.h"
 #include "Views/EchoView.h"
 #include "StateMachines/StateMachine.h"
-#include "StateMachines/Echo.h"
-#include "Telnet/TelnetConstants.h"
-#include "Telnet/TelnetController.h"
 
 GameLoop::GameLoop(Logger *logger, Configuration *configuration, MasterClock *master_clock, Sessions *sessions, uint32_t thread_id) {
     this->logger = logger;
@@ -51,9 +47,6 @@ void GameLoop::handleSession(const std::shared_ptr<Session> &session) {
     if (session->get_view() == nullptr) {
         session->set_view(logger, std::make_shared<EchoView>());
     }
-
-    // Handle any telnet commands that are in the received data stream
-    TelnetController::handleCommands(logger, this->configuration, session.get());
 
     // Handle input
     if (session->get_view() != nullptr) {

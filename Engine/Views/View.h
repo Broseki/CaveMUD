@@ -18,13 +18,6 @@ public:
     virtual void render(Logger* logger, Session* session) = 0;
     virtual void start(Logger* logger, Session* session) = 0;
     virtual void stop(Logger* logger, Session* session) = 0;
-
-protected:
-    // Common UI functions
-    void set_line_mode(Logger* logger, Session* session);
-    bool get_line_mode(Logger* logger, Session* session);
-    void set_char_mode(Logger* logger, Session* session);
-    bool get_char_mode(Logger* logger, Session* session);
 };
 
 #endif //CAVEMUD_VIEW_H

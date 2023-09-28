@@ -6,8 +6,6 @@
 #include <utility>
 #include "Session.h"
 #include "KV_Keys.h"
-#include "../Engine/Telnet/TelnetController.h"
-#include "../Engine/Telnet/TelnetConstants.h"
 
 Session::Session(int socketfd) {
     this->socketfd = socketfd;

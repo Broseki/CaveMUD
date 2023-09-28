@@ -28,11 +28,9 @@ void EchoView::render(Logger* logger, Session* session) {
         if (!session->get_kv(ECHO_TYPE_VAR).empty() && boost::any_cast<std::string>(session->get_kv(ECHO_TYPE_VAR)) == "Reverse") {
             session->remove_state_machine(logger, "ReverseEcho");
             session->add_state_machine(logger, std::make_shared<Echo>());
-            this->set_line_mode(logger, session);
         } else {
             session->remove_state_machine(logger, "Echo");
             session->add_state_machine(logger, std::make_shared<ReverseEcho>());
-            this->set_char_mode(logger, session);
         }
     }
 
