@@ -1,0 +1,15 @@
+{
+  "name" : "cavemud",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "768619a21ef7fb6c5d029a7b141bb7fcef579336",
+  "dependencies" : [ {
+    "name" : "protobuf",
+    "version>=" : "3.21.12"
+  }, {
+    "name" : "vcpkg-cmake-config",
+    "version>=" : "2022-02-06#1"
+  }, {
+    "name" : "vcpkg-cmake",
+    "version>=" : "2023-05-04"
+  } ]
+}

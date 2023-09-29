@@ -12,10 +12,6 @@
 ### What is CaveMUD?
 CaveMUD is an old-school style Multi-User Dungeon text based fantasy game.
 
-I decided to open-source it because it's not like a text based game can compete with the wider world of games or really become
-popular in this day and age, so why not share the source with the world? I also have a somewhat sparse GitHub profile so
-I thought this would be a good way to show off some of my work.
-
 ### Why is it called CaveMUD?
 I don't really know. I just thought it sounded cool. The first text based game
 that I played was DoorMUD and CaveMUD seemed about as logical for a name. I also
@@ -43,4 +39,6 @@ It is designed to be super efficient and extensible, with multi-threading from d
 (More will be added as I think of them)
 
 ### What is the license?
-CaveMUD is licensed under GPLv3.
+CaveMUD is proprietary software, and is not open source. 
+The server is licensed under the Cavefox LLC proprietary license. 
+See the LICENSE.md file for more information.

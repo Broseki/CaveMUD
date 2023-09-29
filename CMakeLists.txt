@@ -25,7 +25,9 @@ FetchContent_MakeAvailable(
         json
         Boost)
 
-enable_testing()
+find_package(Protobuf CONFIG REQUIRED)
+
+include_directories(${Protobuf_INCLUDE_DIRS})
 
 add_executable(
         CaveMUD
@@ -51,4 +53,6 @@ add_executable(
 target_link_libraries(
         CaveMUD
         nlohmann_json::nlohmann_json
-        Boost::any)
+        Boost::any
+        ${Protobuf_LIBRARIES}
+)
