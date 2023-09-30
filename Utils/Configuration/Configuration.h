@@ -25,6 +25,9 @@ public:
     uint16_t game_port;
     int connection_queue_size;
     uint32_t socket_buffer_size;
+    bool tls_enabled;
+    std::string tls_certificate_path;
+    std::string tls_key_path;
 
     // Game settings
     uint32_t max_players;

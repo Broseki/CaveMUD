@@ -29,6 +29,12 @@ Configuration::Configuration(std::string configuration_file_path) {
             data["networking_settings"]["connection_queue_size"].get<int>();
     this->socket_buffer_size =
             data["networking_settings"]["socket_buffer_size"].get<uint32_t>();
+    this->tls_enabled =
+            data["networking_settings"]["tls_enabled"].get<bool>();
+    this->tls_certificate_path =
+            data["networking_settings"]["tls_certificate_path"].get<std::string>();
+    this->tls_key_path =
+            data["networking_settings"]["tls_key_path"].get<std::string>();
 
     // Game Settings
     this->max_players =
@@ -53,6 +59,9 @@ std::string Configuration::toString() const {
            std::string("\n    Game Port: ") + std::to_string(game_port) +
            std::string("\n    Connection Queue Size: ") + std::to_string(connection_queue_size) +
            std::string("\n    Socket Buffer Size: ") + std::to_string(socket_buffer_size) +
+           std::string("\n    TLS Enabled: ") + (tls_enabled ? "true" : "false") +
+           std::string("\n    TLS Certificate Path: ") + tls_certificate_path +
+           std::string("\n    TLS Key Path: ") + tls_key_path +
            std::string("\n  Game Settings:") +
            std::string("\n    Max Players: ") + std::to_string(max_players) +
            std::string("\n    World ID: ") + std::to_string(world_id) +
