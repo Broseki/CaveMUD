@@ -4,14 +4,14 @@ services:
     hostname: cavemud
     build: .
     ports:
-      - "12345:12345"
+      - "11111:11111"
     networks:
       - cavemud_local_internal
   hitch:
     hostname: hitch
     image: hitch:latest
     ports:
-      - "42069:42069"
+      - "43594:43594"
     volumes:
       - ./hitch.conf:/etc/hitch/hitch.conf
       - ./tls:/etc/hitch/tls
