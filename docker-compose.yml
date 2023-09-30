@@ -1,6 +1,24 @@
 version: '3'
 services:
   cavemud:
+    hostname: cavemud
     build: .
     ports:
       - "12345:12345"
+    networks:
+      - cavemud_local_internal
+  hitch:
+    hostname: hitch
+    image: hitch:latest
+    ports:
+      - "42069:42069"
+    volumes:
+      - ./hitch.conf:/etc/hitch/hitch.conf
+      - ./tls:/etc/hitch/tls
+    networks:
+      - cavemud_local_internal
+    depends_on:
+      - cavemud
+networks:
+  cavemud_local_internal:
+    driver: bridge
