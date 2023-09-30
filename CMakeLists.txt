@@ -9,25 +9,20 @@ set(BOOST_ENABLE_CMAKE ON)
 
 include(FetchContent)
 
-FetchContent_Declare(
-        json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG v3.11.2
-)
-
+# Boost does not install correctly using VCPKG on MacOS so we need to use FetchContent
 FetchContent_Declare(
         Boost
         GIT_REPOSITORY https://github.com/boostorg/boost.git
-        GIT_TAG boost-1.80.0
+        GIT_TAG boost-1.83.0
 )
-
-FetchContent_MakeAvailable(
-        json
-        Boost)
-
+FetchContent_MakeAvailable(Boost)
+find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
 
-include_directories(${Protobuf_INCLUDE_DIRS})
+include_directories(
+        ${Protobuf_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+)
 
 add_executable(
         CaveMUD
@@ -50,9 +45,13 @@ add_executable(
         Engine/StateMachines/ReverseEcho.h
         Engine/StateMachines/StateMachine.cpp)
 
+set_target_properties(CaveMUD PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist
+        )
+
 target_link_libraries(
         CaveMUD
-        nlohmann_json::nlohmann_json
-        Boost::any
         ${Protobuf_LIBRARIES}
+        Boost::any
+        ${nlohmann_json_LIBRARIES}
 )

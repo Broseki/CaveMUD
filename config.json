@@ -7,10 +7,7 @@
   "networking_settings": {
     "game_port": 12345,
     "connection_queue_size": 5,
-    "socket_buffer_size": 1000,
-    "tls_enabled": true,
-    "tls_certificate_path": "tls/cert.pem",
-    "tls_key_path": "tls/key.pem"
+    "socket_buffer_size": 1000
   },
   "game_settings": {
     "max_players": 100,
