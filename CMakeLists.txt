@@ -16,12 +16,19 @@ FetchContent_Declare(
         GIT_TAG boost-1.83.0
 )
 FetchContent_MakeAvailable(Boost)
+
+# Packages from VCPKG
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
+
+# Generate C++ code from protobuf files
+file(GLOB PROTO_FILES ./CaveMUD-Protocol/src/*.proto)
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
 
 include_directories(
         ${Protobuf_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 add_executable(
@@ -43,11 +50,14 @@ add_executable(
         Session/KV_Keys.h
         Engine/StateMachines/ReverseEcho.cpp
         Engine/StateMachines/ReverseEcho.h
-        Engine/StateMachines/StateMachine.cpp)
+        Engine/StateMachines/StateMachine.cpp
+        ${PROTO_SRCS}
+        ${PROTO_HDRS}
+)
 
 set_target_properties(CaveMUD PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist
-        )
+)
 
 target_link_libraries(
         CaveMUD

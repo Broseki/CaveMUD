@@ -6,6 +6,7 @@
 #include "../StateMachines/Echo.h"
 #include "../../Session/KV_Keys.h"
 #include "../StateMachines/ReverseEcho.h"
+#include "echo.pb.h"
 
 #define ECHO_TYPE_VAR "echo_type"
 
@@ -13,7 +14,13 @@ void EchoView::render(Logger* logger, Session* session) {
     boost::any echo_out_var = session->get_kv(ECHO_OUT_VAR);
     if (!echo_out_var.empty()) {
         std::string output = boost::any_cast<std::string>(session->get_kv(ECHO_OUT_VAR));
-        session->set_output_buffer(std::vector<char8_t>(output.begin(), output.end()));
+        // Encode the output string into a protobuf message
+        CaveMUDProto::echo echo;
+        echo.set_message_text(output);
+        // Serialize the protobuf message into a char8_t array and put it in the output buffer
+        std::vector<char8_t> output_buffer(echo.ByteSizeLong());
+        echo.SerializeToArray(output_buffer.data(), output_buffer.size());
+        session->set_output_buffer(output_buffer);
     }
 
     // Handle the are you there flag
@@ -42,7 +49,14 @@ void EchoView::render(Logger* logger, Session* session) {
 
 void EchoView::handle_input(Logger* logger, Session* session) {
     std::vector<char8_t> input_buffer = session->get_input_buffer();
-    std::string input(input_buffer.begin(), input_buffer.end());
+    // The buffer will hold a protobuf message, decode the string and put it in input
+    CaveMUDProto::echo echo;
+    if (!echo.ParseFromArray(input_buffer.data(), input_buffer.size())) {
+        logger->log(Logger::ERROR, "Failed to parse Echo message");
+        return;
+    }
+    // Store the value of message_text in the input variable
+    std::string input = echo.message_text();
     session->set_kv(ECHO_IN_VAR, input);
     session->clear_input_buffer();
 }
