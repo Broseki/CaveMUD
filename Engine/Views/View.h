@@ -18,6 +18,7 @@ public:
     virtual void render(Logger* logger, Session* session) = 0;
     virtual void start(Logger* logger, Session* session) = 0;
     virtual void stop(Logger* logger, Session* session) = 0;
+    virtual ~View() = default;
 };
 
 #endif //CAVEMUD_VIEW_H

@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
     Sessions sessions = Sessions(&configuration, &logger);
 
     // Create server listener threads
-    for (int i = 0; i < configuration.connection_establishment_handler_thread_count; i++) {
+    for (uint32_t i = 0; i < configuration.connection_establishment_handler_thread_count; i++) {
         threads.emplace_back(std::thread(&ServerListener::start, new ServerListener(&logger, &server_socket, &configuration, &sessions)));
     }
 
@@ -49,12 +49,12 @@ int main(int argc, char** argv) {
     MasterClock master_clock = MasterClock(&logger, configuration.player_session_socket_handler_thread_count, configuration.game_loop_thread_count);
 
     // Start session handler threads
-    for (int i = 0; i < configuration.player_session_socket_handler_thread_count; i++) {
+    for (uint32_t i = 0; i < configuration.player_session_socket_handler_thread_count; i++) {
         threads.emplace_back(std::thread(&SessionHandler::start, new SessionHandler(&logger, &configuration, &master_clock, &sessions, i)));
     }
 
     // Start game loop threads
-    for (int i = 0; i < configuration.game_loop_thread_count; i++) {
+    for (uint32_t i = 0; i < configuration.game_loop_thread_count; i++) {
         threads.emplace_back(std::thread(&GameLoop::start, new GameLoop(&logger, &configuration, &master_clock, &sessions, i)));
     }
 

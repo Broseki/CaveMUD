@@ -21,6 +21,8 @@ public:
 
     StateMachine(std::string machine_name, bool steppable);
 
+    virtual ~StateMachine() = default;
+
     virtual void step(Logger* logger, std::shared_ptr<Session> session) = 0;
 
     virtual void reset(Logger* logger, std::shared_ptr<Session> session) = 0;

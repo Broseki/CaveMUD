@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 project(CaveMUD)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wpedantic -Wvla -Wextra-semi -Wnull-dereference -Wswitch-enum -Wno-unused-parameter -Wno-c++98-compat-pedantic")
 
 set(BOOST_INCLUDE_LIBRARIES thread filesystem system program_options)
 set(BOOST_ENABLE_CMAKE ON)
