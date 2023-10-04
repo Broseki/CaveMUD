@@ -15,7 +15,7 @@ void EchoView::render(Logger* logger, Session* session) {
     if (!echo_out_var.empty()) {
         std::string output = boost::any_cast<std::string>(session->get_kv(ECHO_OUT_VAR));
         // Encode the output string into a protobuf message
-        CaveMUDProto::echo echo;
+        CaveMUDProto::Echo echo;
         echo.set_message_text(output);
         // Serialize the protobuf message into a char8_t array and put it in the output buffer
         std::vector<char8_t> output_buffer(echo.ByteSizeLong());
@@ -50,7 +50,7 @@ void EchoView::render(Logger* logger, Session* session) {
 void EchoView::handle_input(Logger* logger, Session* session) {
     std::vector<char8_t> input_buffer = session->get_input_buffer();
     // The buffer will hold a protobuf message, decode the string and put it in input
-    CaveMUDProto::echo echo;
+    CaveMUDProto::Echo echo;
     if (!echo.ParseFromArray(input_buffer.data(), input_buffer.size())) {
         logger->log(Logger::ERROR, "Failed to parse Echo message");
         return;
