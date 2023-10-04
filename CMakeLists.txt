@@ -7,6 +7,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wpedantic -Wvla -
 set(BOOST_INCLUDE_LIBRARIES thread filesystem system program_options)
 set(BOOST_ENABLE_CMAKE ON)
 
+add_subdirectory(Tests)
+
 include(FetchContent)
 
 # Boost does not install correctly using VCPKG on MacOS so we need to use FetchContent
