@@ -1,0 +1,25 @@
+name: cppcheck-cavemud-server
+run-name: ${{ github.actor }} is running CppCheck against ${{ github.repository }}
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  build-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_PAT }}
+          submodules: 'recursive'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck
+      - name: Run CppCheck
+        run: |
+          cppcheck ${{ github.workspace }} --force
