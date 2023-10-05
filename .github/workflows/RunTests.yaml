@@ -1,0 +1,30 @@
+name: build-cavemud-server
+run-name: ${{ github.actor }} is building ${{ github.repository }}
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  build-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3.5.3
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: '**/vcpkg.json'
+
+      - name: Configure the project
+        uses: threeal/cmake-action@v1.3.0
+
+      - name: Build the project
+        run: cmake --build build
+        
+      - name: Test the project
+        run: ctest --test-dir build
