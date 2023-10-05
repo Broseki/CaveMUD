@@ -1,6 +1,3 @@
 [submodule "CaveMUD-Protocol"]
 	path = CaveMUD-Protocol
 	url = git@github.com:Broseki/CaveMUD-Protocol.git
-[submodule "vcpkg"]
-	path = vcpkg
-	url = https://github.com/Microsoft/vcpkg.git
