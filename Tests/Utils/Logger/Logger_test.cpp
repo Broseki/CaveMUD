@@ -238,6 +238,4 @@ TEST_F(LoggerTest, LogLevelUnknown) {
 
     logger_tmp.log(static_cast<Logger::LogLevel>(100), message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
-
-    EXPECT_NE(1,1);
 }
