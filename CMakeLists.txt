@@ -4,10 +4,8 @@ project(CaveMUD)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wpedantic -Wvla -Wextra-semi -Wnull-dereference -Wswitch-enum -Wno-unused-parameter -Wno-c++98-compat-pedantic")
 
-set(BOOST_INCLUDE_LIBRARIES thread filesystem system program_options)
+set(BOOST_INCLUDE_LIBRARIES any)
 set(BOOST_ENABLE_CMAKE ON)
-
-add_subdirectory(Tests)
 
 include(FetchContent)
 
@@ -32,10 +30,7 @@ include_directories(
         ${Boost_INCLUDE_DIRS}
         ${CMAKE_CURRENT_BINARY_DIR}
 )
-
-add_executable(
-        CaveMUD
-        main.h main.cpp
+add_library(CaveMUD STATIC
         Utils/Configuration/Configuration.cpp Utils/Configuration/Configuration.h
         Utils/Logger/Logger.cpp Utils/Logger/Logger.h
         Networking/Server/ServerListener.cpp Networking/Server/ServerListener.h
@@ -57,13 +52,25 @@ add_executable(
         ${PROTO_HDRS}
 )
 
-set_target_properties(CaveMUD PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist
-)
-
 target_link_libraries(
         CaveMUD
         ${Protobuf_LIBRARIES}
         Boost::any
         ${nlohmann_json_LIBRARIES}
 )
+
+add_executable(
+        CaveMUDServer
+        main.h main.cpp
+)
+
+set_target_properties(CaveMUDServer PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist
+)
+
+target_link_libraries(
+        CaveMUDServer
+        CaveMUD
+)
+
+add_subdirectory(Tests)

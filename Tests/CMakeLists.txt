@@ -4,11 +4,12 @@ enable_testing()
 
 add_executable(
         CaveMUD_tests
-        Hello_test.cpp
+        Utils/Logger/Logger_test.cpp
 )
 target_link_libraries(
         CaveMUD_tests
         GTest::gtest_main
+        CaveMUD
 )
 
 include(GoogleTest)
