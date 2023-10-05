@@ -15,16 +15,19 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3.5.3
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
+      - name: vcpkg build
+        uses: johnwason/vcpkg-action@v5
+        id: vcpkg
         with:
-          vcpkgJsonGlob: 'vcpkg.json'
+          manifest-dir: '${{ github.workspace }}'
+          token: ${{ github.token }}
+          triplet: x64-linux
 
       - name: Configure the project
         uses: threeal/cmake-action@v1.3.0
 
       - name: Build the project
-        run: cmake --build build
+        run: cmake -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake --build build
         
       - name: Test the project
         run: ctest --test-dir build
