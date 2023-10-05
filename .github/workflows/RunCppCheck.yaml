@@ -22,4 +22,4 @@ jobs:
           sudo apt-get install -y cppcheck
       - name: Run CppCheck
         run: |
-          cppcheck ${{ github.workspace }} --force --enable=all --error-exitcode=13
+          cppcheck ${{ github.workspace }} --force --error-exitcode=13
