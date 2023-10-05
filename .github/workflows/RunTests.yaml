@@ -30,3 +30,8 @@ jobs:
         run: |
           cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
           cmake --build build
+      - name: Run unit tests
+        run: |
+          cd ${{ github.workspace }}/build/Tests
+          chmod +x CaveMUD_tests
+          ./CaveMUD_tests
