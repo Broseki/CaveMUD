@@ -1,4 +1,5 @@
 find_package(GTest CONFIG REQUIRED)
+FIND_LIBRARY(GOOGLE_MOCK gmock)
 
 enable_testing()
 
@@ -9,10 +10,12 @@ add_executable(
         CaveMUD_tests
         Utils/Logger/Logger_test.cpp
         Utils/Configuration/Configuration_test.cpp
+        Session/Sessions_test.cpp
 )
 target_link_libraries(
         CaveMUD_tests
         GTest::gtest_main
+        GTest::gmock_main
         CaveMUD
 )
 

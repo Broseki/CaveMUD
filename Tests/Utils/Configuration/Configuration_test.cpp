@@ -20,7 +20,7 @@ TEST_F(ConfigurationTest, NetworkingSettings) {
 }
 
 TEST_F(ConfigurationTest, GameSettings) {
-    EXPECT_EQ(configuration.max_players, 100);
+    EXPECT_EQ(configuration.max_players, 10);
     EXPECT_EQ(configuration.world_id, 112);
     EXPECT_EQ(configuration.tick_rate, 12);
 }
@@ -41,7 +41,7 @@ TEST_F(ConfigurationTest, ToString) {
             "\n    Connection Queue Size: 5"
             "\n    Socket Buffer Size: 1000"
             "\n  Game Settings:"
-            "\n    Max Players: 100"
+            "\n    Max Players: 10"
             "\n    World ID: 112"
             "\n    Tick Rate: 12"
             "\n  System Settings:"

@@ -22,7 +22,7 @@ public:
     };
 
     Logger(std::ostream* output_stream, LogLevel log_level);
-    void log(LogLevel log_level, std::string message);
+    virtual void log(LogLevel log_level, std::string message);
 
 private:
     LogLevel m_log_level;
