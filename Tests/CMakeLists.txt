@@ -11,6 +11,7 @@ add_executable(
         Utils/Logger/Logger_test.cpp
         Utils/Configuration/Configuration_test.cpp
         Session/Sessions_test.cpp
+        Session/Session_test.cpp
 )
 target_link_libraries(
         CaveMUD_tests
