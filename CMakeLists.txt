@@ -20,6 +20,8 @@ FetchContent_MakeAvailable(Boost)
 # Packages from VCPKG
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
+find_package(sol2 CONFIG REQUIRED)
+find_package(lua CONFIG REQUIRED)
 
 # Generate C++ code from protobuf files
 file(GLOB PROTO_FILES ./CaveMUD-Protocol/src/*.proto)
@@ -29,6 +31,8 @@ include_directories(
         ${Protobuf_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${CMAKE_CURRENT_BINARY_DIR}
+        ${sol2_INCLUDE_DIRS}
+        ${lua_INCLUDE_DIRS}
 )
 add_library(CaveMUD STATIC
         Utils/Configuration/Configuration.cpp Utils/Configuration/Configuration.h
@@ -57,6 +61,8 @@ target_link_libraries(
         ${Protobuf_LIBRARIES}
         Boost::any
         ${nlohmann_json_LIBRARIES}
+        sol2
+        ${LUA_LIBRARIES}
 )
 
 add_executable(
