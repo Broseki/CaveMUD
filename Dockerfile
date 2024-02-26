@@ -31,4 +31,4 @@ RUN export VCPKG_FORCE_SYSTEM_BINARIES=1 && \
     make
 
 # Set the default command to run when the container starts
-CMD ["/app/dist/CaveMUD"]
+CMD ["/app/dist/CaveMUDServer"]
