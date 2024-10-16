@@ -39,6 +39,4 @@ It is designed to be super efficient and extensible, with multi-threading from d
 (More will be added as I think of them)
 
 ### What is the license?
-CaveMUD is proprietary software, and is not open source. 
-The server is licensed under the Cavefox LLC proprietary license. 
-See the LICENSE.md file for more information.
+CaveMUD is GPLv3.
