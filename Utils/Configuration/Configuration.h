@@ -6,6 +6,7 @@
 #define CAVEMUD_CONFIGURATION_H
 
 #include <string>
+#include <cstdint>
 
 class Configuration {
 

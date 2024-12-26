@@ -6,6 +6,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <algorithm>
 
 Logger::Logger(std::ostream *output_stream, LogLevel level) {
     this->m_log_level = level;
