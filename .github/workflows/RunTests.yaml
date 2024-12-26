@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang cmake git curl zip unzip tar ninja-build pkg-config make autoconf autoconf-archive g++ gcc
+          sudo apt-get install -y clang cmake git curl zip unzip tar ninja-build pkg-config make autoconf autoconf-archive
           export CC=clang
           export CXX=clang++
       - name: Install VCPKG

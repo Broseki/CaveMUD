@@ -7,6 +7,7 @@ ENV VCPKG_FORCE_SYSTEM_BINARIES=1
 # Install necessary packages and LLVM/Clang 19
 RUN apt-get update && \
     apt-get install -y \
+        clang \
         cmake \
         git \
         curl \
@@ -22,18 +23,12 @@ RUN apt-get update && \
         gnupg \
         software-properties-common \
         lsb-release && \
-    wget https://apt.llvm.org/llvm.sh && \
-    chmod +x llvm.sh && \
-    ./llvm.sh 19 && \
-    apt-get install -y clang-19 && \
-    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 && \
-    update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 100 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Set Clang++ as the default C++ compiler
-ENV CC=clang-19
-ENV CXX=clang++-19
+ENV CC=clang
+ENV CXX=clang++
 
 # Set the working directory
 WORKDIR /app
@@ -60,9 +55,7 @@ RUN rm -rf dist build
 # Build the application using CMake with Clang++
 RUN mkdir build && \
     cd build && \
-    cmake -DCMAKE_TOOLCHAIN_FILE=/app/vcpkg/scripts/buildsystems/vcpkg.cmake \
-          -DCMAKE_C_COMPILER=clang-19 \
-          -DCMAKE_CXX_COMPILER=clang++-19 .. && \
+    cmake -DCMAKE_TOOLCHAIN_FILE=/app/vcpkg/scripts/buildsystems/vcpkg.cmake .. && \
     make
 
 # Set the default command to run when the container starts
