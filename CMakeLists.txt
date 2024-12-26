@@ -57,6 +57,8 @@ add_library(CaveMUD STATIC
         Engine/StateMachines/StateMachine.cpp
         ${PROTO_SRCS}
         ${PROTO_HDRS}
+        Utils/Database/Database.cpp
+        Utils/Database/Database.h
 )
 
 target_link_libraries(

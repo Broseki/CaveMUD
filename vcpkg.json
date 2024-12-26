@@ -1,27 +1,24 @@
 {
-  "name": "cavemud",
-  "version-string": "1.0.0",
-  "builtin-baseline": "898b728edc5e0d12b50015f9cd18247c4257a3eb",
-  "dependencies": [
-    {
-      "name": "protobuf",
-      "version>=": "3.21.12"
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "version>=": "2022-02-06#1"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "version>=": "2023-05-04"
-    },
-    {
-      "name": "nlohmann-json",
-      "version>=": "3.11.2"
-    },
-    {
-      "name": "gtest",
-      "version>=": "1.14.0"
-    }
-  ]
+  "name" : "cavemud",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "898b728edc5e0d12b50015f9cd18247c4257a3eb",
+  "dependencies" : [ {
+    "name" : "protobuf",
+    "version>=" : "3.21.12"
+  }, {
+    "name" : "vcpkg-cmake-config",
+    "version>=" : "2022-02-06#1"
+  }, {
+    "name" : "vcpkg-cmake",
+    "version>=" : "2023-05-04"
+  }, {
+    "name" : "nlohmann-json",
+    "version>=" : "3.11.2"
+  }, {
+    "name" : "gtest",
+    "version>=" : "1.14.0"
+  }, {
+    "name" : "libpq",
+    "version>=" : "16.0#2"
+  } ]
 }

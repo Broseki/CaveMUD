@@ -19,6 +19,17 @@ services:
       - cavemud_local_internal
     depends_on:
       - cavemud
+  database:
+    hostname: database
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: cavemud
+      POSTGRES_PASSWORD: cavemud
+      POSTGRES_DB: cavemud
+    networks:
+      - cavemud_local_internal
 networks:
   cavemud_local_internal:
     driver: bridge

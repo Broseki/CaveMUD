@@ -16,5 +16,13 @@
   },
   "system_settings": {
     "log_level": "debug"
+  },
+  "database_settings": {
+    "host": "database",
+    "port": 5432,
+    "user": "cavemud",
+    "password": "cavemud",
+    "database": "cavemud",
+    "connection_pool_size": 10
   }
 }

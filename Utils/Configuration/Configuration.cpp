@@ -41,6 +41,21 @@ Configuration::Configuration(std::string configuration_file_path) {
     // System Settings
     this->log_level =
             data["system_settings"]["log_level"].get<std::string>();
+
+    // Database Settings
+    this->database_host =
+            data["database_settings"]["host"].get<std::string>();
+    this->database_port =
+            data["database_settings"]["port"].get<uint16_t>();
+    this->database_user =
+            data["database_settings"]["user"].get<std::string>();
+    this->database_password =
+            data["database_settings"]["password"].get<std::string>();
+    this->database_name =
+            data["database_settings"]["database"].get<std::string>();
+    this->database_pool_size =
+            data["database_settings"]["connection_pool_size"].get<uint32_t>();
+
 }
 
 std::string Configuration::toString() const {
@@ -58,5 +73,12 @@ std::string Configuration::toString() const {
            std::string("\n    World ID: ") + std::to_string(world_id) +
            std::string("\n    Tick Rate: ") + std::to_string(tick_rate) +
            std::string("\n  System Settings:") +
-           std::string("\n    log_level: ") + log_level;
+           std::string("\n    log_level: ") + log_level +
+           std::string("\n  Database Settings:") +
+           std::string("\n    Database Host: ") + database_host +
+           std::string("\n    Database Port: ") + std::to_string(database_port) +
+           std::string("\n    Database User: ") + database_user +
+           std::string("\n    Database Password: ") + database_password +
+           std::string("\n    Database Name: ") + database_name +
+           std::string("\n    Database Connection Pool Size: ") + std::to_string(database_pool_size);
 }

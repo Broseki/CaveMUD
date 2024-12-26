@@ -34,6 +34,14 @@ public:
 
     // Development Settings
     std::string log_level;
+
+    // Database Settings
+    std::string database_host;
+    uint16_t database_port;
+    std::string database_user;
+    std::string database_password;
+    std::string database_name;
+    uint32_t database_pool_size;
 };
 
 
