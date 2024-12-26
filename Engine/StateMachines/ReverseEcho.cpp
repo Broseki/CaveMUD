@@ -1,6 +1,7 @@
 //
 // Created by Travis Canning on 11/20/22.
 //
+#include <algorithm>
 
 #include "ReverseEcho.h"
 

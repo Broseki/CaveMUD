@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include <utility>
+#include <algorithm>
 #include "Session.h"
 #include "KV_Keys.h"
 
@@ -64,7 +64,10 @@ void Session::remove_state_machine(Logger *logger, const std::shared_ptr<StateMa
 
     state_machine->stop(logger, this);
 
-    this->activeStateMachines.erase(std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), state_machine), this->activeStateMachines.end());
+    this->activeStateMachines.erase(
+        std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), state_machine),
+        this->activeStateMachines.end()
+    );
 }
 
 std::vector<std::shared_ptr<StateMachine>> Session::get_state_machines() {
@@ -110,7 +113,6 @@ std::shared_ptr<View> Session::get_view() {
 void Session::remove_state_machine(Logger *logger, const std::string& machine_name) {
     const std::lock_guard<std::mutex> lock(this->state_machine_mutex);
 
-    // Create a temporary vector to hold the state machines that we want to remove
     std::vector<std::shared_ptr<StateMachine>> machines_to_remove;
 
     for (const auto& machine: this->activeStateMachines) {
@@ -120,9 +122,11 @@ void Session::remove_state_machine(Logger *logger, const std::string& machine_na
         }
     }
 
-    // Remove the state machines that we want to remove
     for (const auto& machine: machines_to_remove) {
-        this->activeStateMachines.erase(std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), machine), this->activeStateMachines.end());
+        this->activeStateMachines.erase(
+            std::remove(this->activeStateMachines.begin(), this->activeStateMachines.end(), machine),
+            this->activeStateMachines.end()
+        );
     }
 }
 
