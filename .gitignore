@@ -158,3 +158,4 @@ libs/
 
 .vscode/
 **/.DS_Store
+vcpkg_installed/
