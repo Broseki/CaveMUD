@@ -8,6 +8,7 @@
 #include "KV_Keys.h"
 
 Session::Session(int socketfd) {
+    std::cout << "Creating session with FD: " << socketfd << std::endl;
     this->socketfd = socketfd;
 }
 

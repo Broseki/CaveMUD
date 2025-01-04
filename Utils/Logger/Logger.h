@@ -9,8 +9,6 @@
 #include <mutex>
 
 class Logger {
-private:
-    std::ostream *m_output_stream;
 
 public:
     enum LogLevel {
@@ -21,11 +19,24 @@ public:
         FATAL
     };
 
-    Logger(std::ostream* output_stream, LogLevel log_level);
+    Logger(const Logger&) = delete;
+    virtual ~Logger() = default;
+    Logger& operator=(const Logger&) = delete;
+
+    static Logger* initialize(std::ostream *output_stream, LogLevel level);
+    static Logger* get_instance();
+    static void destroy();
+
     virtual void log(LogLevel log_level, std::string message);
 
+protected:
+    Logger(std::ostream *output_stream, LogLevel level);
+    static Logger* m_instance;
+
 private:
+
     LogLevel m_log_level;
+    std::ostream *m_output_stream;
     std::mutex m_log_mutex;
 
 public:

@@ -6,19 +6,53 @@
 #include "../../Session/Sessions.h"
 #include <memory>
 
+
 class MockLogger : public Logger {
 public:
-    MockLogger(std::ostream* output_stream, LogLevel level) : Logger(output_stream, level) {}
+    static MockLogger* get_instance() {
+        if (m_instance == nullptr) {
+            m_instance = new MockLogger(&std::cout, Logger::DEBUG);
+        }
+        return m_instance;
+    }
+
+    static void reset() {
+        if (m_instance != nullptr) {
+            delete m_instance;
+            m_instance = nullptr;
+        }
+    }
+
     MOCK_METHOD(void, log, (LogLevel level, std::string message), (override));
+
+protected:
+    MockLogger(std::ostream* output_stream, LogLevel level) : Logger(output_stream, level) {}
+
+private:
+    static MockLogger* m_instance;
 };
+
+// Initialize the static member
+MockLogger* MockLogger::m_instance = nullptr;
 
 class SessionsTest : public ::testing::Test {
 protected:
-    SessionsTest() : configuration("test_config.json"), logger(&std::cout, Logger::FATAL), sessions(&configuration, &logger) {}
+    SessionsTest() : configuration("test_config.json"), logger(MockLogger::get_instance()), sessions(&configuration, logger) {}
 
     Configuration configuration;
-    Logger logger;
+    MockLogger* logger;
     Sessions sessions;
+
+public:
+
+    void TearDown() override {
+        testing::Mock::VerifyAndClearExpectations(logger);
+    }
+
+    static void TearDownTestSuite() {
+        MockLogger::reset();
+    }
+
 };
 
 TEST_F(SessionsTest, AddSession) {
@@ -115,10 +149,9 @@ TEST_F(SessionsTest, RemoveNonExistentSession) {
 
 TEST_F(SessionsTest, Destructor) {
     // Expect the logger to be called with the correct message
-    MockLogger logger_tmp(&std::cout, Logger::INFO);
-    EXPECT_CALL(logger_tmp, log(Logger::INFO, "Destroying Sessions object")).Times(1);
+    EXPECT_CALL(*logger, log(Logger::INFO, "Destroying Sessions object")).Times(1);
 
-    Sessions *tmp_sessions = new Sessions(&configuration, &logger_tmp);
+    Sessions *tmp_sessions = new Sessions(&configuration, logger);
 
     tmp_sessions->addSession(std::make_shared<Session>(0));
     tmp_sessions->addSession(std::make_shared<Session>(0));

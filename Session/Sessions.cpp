@@ -5,6 +5,7 @@
 #include "Sessions.h"
 #include <mutex>
 #include <unistd.h>
+#include <iostream>
 
 Sessions::Sessions(Configuration *config, Logger *logger) {
     this->config = config;

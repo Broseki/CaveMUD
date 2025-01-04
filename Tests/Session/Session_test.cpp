@@ -72,22 +72,25 @@ TEST_F(SessionTest, ClearOutputBuffer) {
 TEST_F(SessionTest, AddRemoveStateMachine) {
     // Setup
     auto state_machine = std::make_shared<Echo>();
-    Logger logger(&std::cout, Logger::FATAL);
+    Logger* logger = Logger::initialize(&std::cout, Logger::FATAL);
 
     // Test to make sure the session doesn't have any state machines
     EXPECT_EQ(session_uut.get_state_machines().size(), 0);
 
     // Add the state machine
-    session_uut.add_state_machine(&logger, state_machine);
+    session_uut.add_state_machine(logger, state_machine);
 
     // Test to make sure the session has the state machine
     EXPECT_EQ(session_uut.get_state_machines().size(), 1);
 
     // Remove the state machine
-    session_uut.remove_state_machine(&logger, state_machine);
+    session_uut.remove_state_machine(logger, state_machine);
 
     // Test to make sure the session doesn't have any state machines
     EXPECT_EQ(session_uut.get_state_machines().size(), 0);
+
+    // Tear down logger
+    Logger::destroy();
 }
 
 TEST_F(SessionTest, GetSetKeyValue) {
@@ -123,14 +126,14 @@ TEST_F(SessionTest, RemoveKeyValue) {
 
 
 TEST_F(SessionTest, GetSetView) {
-    Logger logger(&std::cout, Logger::FATAL);
+    Logger *logger = Logger::initialize(&std::cout, Logger::FATAL);
     auto view = std::make_shared<EchoView>();
 
     // Test to make sure the session doesn't have a view
     EXPECT_EQ(session_uut.get_view(), nullptr);
 
     // Set the view
-    session_uut.set_view(&logger, view);
+    session_uut.set_view(logger, view);
 
     // Test to make sure the session has the view
     EXPECT_EQ(session_uut.get_view(), view);
