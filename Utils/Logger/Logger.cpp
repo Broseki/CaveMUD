@@ -8,6 +8,33 @@
 #include <iostream>
 #include <algorithm>
 
+Logger* Logger::m_instance = nullptr;
+
+Logger* Logger::get_instance() {
+    if (m_instance == nullptr) {
+        // The logger has not been initialized yet
+        // throw an exception
+        throw std::runtime_error("Attempted to get the logger instance before it was initialized");
+    }
+    return m_instance;
+}
+
+Logger* Logger::initialize(std::ostream *output_stream, LogLevel level) {
+    if (m_instance == nullptr) {
+        m_instance = new Logger(output_stream, level);
+    } else {
+        m_instance->log(LogLevel::WARNING, "The logger has already been initialized");
+    }
+    return m_instance;
+}
+
+void Logger::destroy() {
+    if (m_instance != nullptr) {
+        delete m_instance;
+        m_instance = nullptr;
+    }
+}
+
 Logger::Logger(std::ostream *output_stream, LogLevel level) {
     this->m_log_level = level;
     this->m_output_stream = output_stream;

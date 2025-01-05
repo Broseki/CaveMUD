@@ -7,7 +7,6 @@ using namespace testing;
 class LoggerTest : public Test {
 public:
     std::ostringstream output_stream;
-    Logger logger{&output_stream, Logger::DEBUG};
 };
 
 TEST_F(LoggerTest, LogLevelToString) {
@@ -32,210 +31,278 @@ TEST_F(LoggerTest, StringToLogLevel) {
 
 TEST_F(LoggerTest, LogDebug) {
     // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
     std::string message = "Debug message";
-    logger.log(Logger::DEBUG, message);
+    logger->log(Logger::DEBUG, message);
 
     // Test
     EXPECT_EQ(output_stream.str().find("[DEBUG - "), 0);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogInfo) {
     // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
     std::string message = "Info message";
-    logger.log(Logger::INFO, message);
+    logger->log(Logger::INFO, message);
 
     // Test
     EXPECT_EQ(output_stream.str().find("[INFO - "), 0);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogWarning) {
     // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
     std::string message = "Warning message";
-    logger.log(Logger::WARNING, message);
+    logger->log(Logger::WARNING, message);
 
     // Test
     EXPECT_EQ(output_stream.str().find("[WARNING - "), 0);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogError) {
     // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
     std::string message = "Error message";
-    logger.log(Logger::ERROR, message);
+    logger->log(Logger::ERROR, message);
 
     // Test
     EXPECT_EQ(output_stream.str().find("[ERROR - "), 0);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogFatal) {
     // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
     std::string message = "Fatal message";
-    logger.log(Logger::FATAL, message);
+    logger->log(Logger::FATAL, message);
 
     // Test
     EXPECT_EQ(output_stream.str().find("[FATAL - "), 0);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogUnknownLogLevel) {
     // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
     std::string message = "Unknown log level message";
-    logger.log(static_cast<Logger::LogLevel>(100), message);
+    logger->log(static_cast<Logger::LogLevel>(100), message);
 
     // Test
     EXPECT_EQ(output_stream.str().find("[UNKNOWN - "), 0);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogLevelDebug) {
     // Setup
-    Logger logger_tmp{&output_stream, Logger::DEBUG};
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
     std::string message = "Test message";
 
     // Test
-    logger_tmp.log(Logger::DEBUG, message);
+    logger->log(Logger::DEBUG, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
     
-    logger_tmp.log(Logger::INFO, message);
+    logger->log(Logger::INFO, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::WARNING, message);
+    logger->log(Logger::WARNING, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::ERROR, message);
+    logger->log(Logger::ERROR, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::FATAL, message);
+    logger->log(Logger::FATAL, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(static_cast<Logger::LogLevel>(100), message);
+    logger->log(static_cast<Logger::LogLevel>(100), message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogLevelInfo) {
     // Setup
-    Logger logger_tmp{&output_stream, Logger::INFO};
+    Logger* logger = Logger::initialize(&output_stream, Logger::INFO);
     std::string message = "Test message";
 
     // Test
-    logger_tmp.log(Logger::DEBUG, message);
+    logger->log(Logger::DEBUG, message);
     EXPECT_EQ(output_stream.str(), "");
     
-    logger_tmp.log(Logger::INFO, message);
+    logger->log(Logger::INFO, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::WARNING, message);
+    logger->log(Logger::WARNING, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::ERROR, message);
+    logger->log(Logger::ERROR, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::FATAL, message);
+    logger->log(Logger::FATAL, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(static_cast<Logger::LogLevel>(100), message);
+    logger->log(static_cast<Logger::LogLevel>(100), message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogLevelWarning) {
     // Setup
-    Logger logger_tmp{&output_stream, Logger::WARNING};
+    Logger* logger = Logger::initialize(&output_stream, Logger::WARNING);
     std::string message = "Test message";
 
     // Test
-    logger_tmp.log(Logger::DEBUG, message);
+    logger->log(Logger::DEBUG, message);
     EXPECT_EQ(output_stream.str(), "");
     
-    logger_tmp.log(Logger::INFO, message);
+    logger->log(Logger::INFO, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::WARNING, message);
+    logger->log(Logger::WARNING, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::ERROR, message);
+    logger->log(Logger::ERROR, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::FATAL, message);
+    logger->log(Logger::FATAL, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(static_cast<Logger::LogLevel>(100), message);
+    logger->log(static_cast<Logger::LogLevel>(100), message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogLevelError) {
     // Setup
-    Logger logger_tmp{&output_stream, Logger::ERROR};
+    Logger* logger = Logger::initialize(&output_stream, Logger::ERROR);
     std::string message = "Test message";
 
     // Test
-    logger_tmp.log(Logger::DEBUG, message);
+    logger->log(Logger::DEBUG, message);
     EXPECT_EQ(output_stream.str(), "");
     
-    logger_tmp.log(Logger::INFO, message);
+    logger->log(Logger::INFO, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::WARNING, message);
+    logger->log(Logger::WARNING, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::ERROR, message);
+    logger->log(Logger::ERROR, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(Logger::FATAL, message);
+    logger->log(Logger::FATAL, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(static_cast<Logger::LogLevel>(100), message);
+    logger->log(static_cast<Logger::LogLevel>(100), message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogLevelFatal) {
     // Setup
-    Logger logger_tmp{&output_stream, Logger::FATAL};
+    Logger *logger = Logger::initialize(&output_stream, Logger::FATAL);
     std::string message = "Test message";
 
     // Test
-    logger_tmp.log(Logger::DEBUG, message);
+    logger->log(Logger::DEBUG, message);
     EXPECT_EQ(output_stream.str(), "");
     
-    logger_tmp.log(Logger::INFO, message);
+    logger->log(Logger::INFO, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::WARNING, message);
+    logger->log(Logger::WARNING, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::ERROR, message);
+    logger->log(Logger::ERROR, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::FATAL, message);
+    logger->log(Logger::FATAL, message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
 
-    logger_tmp.log(static_cast<Logger::LogLevel>(100), message);
+    logger->log(static_cast<Logger::LogLevel>(100), message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
 }
 
 TEST_F(LoggerTest, LogLevelUnknown) {
     // Setup
-    Logger logger_tmp{&output_stream, static_cast<Logger::LogLevel>(100)};
+    Logger *logger = Logger::initialize(&output_stream, static_cast<Logger::LogLevel>(100));
     std::string message = "Test message";
 
     // Test
-    logger_tmp.log(Logger::DEBUG, message);
+    logger->log(Logger::DEBUG, message);
     EXPECT_EQ(output_stream.str(), "");
     
-    logger_tmp.log(Logger::INFO, message);
+    logger->log(Logger::INFO, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::WARNING, message);
+    logger->log(Logger::WARNING, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::ERROR, message);
+    logger->log(Logger::ERROR, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(Logger::FATAL, message);
+    logger->log(Logger::FATAL, message);
     EXPECT_EQ(output_stream.str(), "");
 
-    logger_tmp.log(static_cast<Logger::LogLevel>(100), message);
+    logger->log(static_cast<Logger::LogLevel>(100), message);
     EXPECT_NE(output_stream.str().find(message), std::string::npos);
+
+    // Tear down
+    Logger::destroy();
+}
+
+TEST_F(LoggerTest, DuplicateInitializeCall) {
+    // Call initialize twice
+    Logger::initialize(&output_stream, Logger::DEBUG);
+    // The first call should be successful with no warning message
+    EXPECT_EQ(output_stream.str(), "");
+
+    // Call initialize again
+    Logger::initialize(&output_stream, Logger::DEBUG);
+    // We should get a warning message
+    EXPECT_EQ(output_stream.str().find("[WARNING - "), 0);
+
+    // Tear down
+    Logger::destroy();
+}
+
+TEST_F(LoggerTest, GetInstance) {
+    // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
+
+    // Test
+    EXPECT_EQ(Logger::get_instance(), logger);
+
+    // Tear down
+    Logger::destroy();
 }

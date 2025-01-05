@@ -6,19 +6,24 @@
 #include "../../Session/Sessions.h"
 #include <memory>
 
-class MockLogger : public Logger {
-public:
-    MockLogger(std::ostream* output_stream, LogLevel level) : Logger(output_stream, level) {}
-    MOCK_METHOD(void, log, (LogLevel level, std::string message), (override));
-};
-
 class SessionsTest : public ::testing::Test {
 protected:
-    SessionsTest() : configuration("test_config.json"), logger(&std::cout, Logger::FATAL), sessions(&configuration, &logger) {}
+    SessionsTest() : logger(Logger::initialize(&std::cout, Logger::INFO)), configuration(Configuration::initialize("test_config.json")), sessions(configuration, logger) {}
 
-    Configuration configuration;
-    Logger logger;
+    Logger* logger;
+    Configuration* configuration;
     Sessions sessions;
+
+public:
+
+    void TearDown() override {
+        testing::Mock::VerifyAndClearExpectations(logger);
+    }
+
+    static void TearDownTestSuite() {
+        Logger::destroy();
+    }
+
 };
 
 TEST_F(SessionsTest, AddSession) {
@@ -113,22 +118,36 @@ TEST_F(SessionsTest, RemoveNonExistentSession) {
     EXPECT_EQ(sessions.getSessions(0, 1)[0], session);
 }
 
+
 TEST_F(SessionsTest, Destructor) {
-    // Expect the logger to be called with the correct message
-    MockLogger logger_tmp(&std::cout, Logger::INFO);
-    EXPECT_CALL(logger_tmp, log(Logger::INFO, "Destroying Sessions object")).Times(1);
+    std::vector<std::weak_ptr<Session>> weak_refs;
+    {
+        Sessions *tmp_sessions = new Sessions(configuration, logger);
 
-    Sessions *tmp_sessions = new Sessions(&configuration, &logger_tmp);
+        // Store weak references to track Session lifetime
+        auto session1 = std::make_shared<Session>(0);
+        auto session2 = std::make_shared<Session>(0);
+        auto session3 = std::make_shared<Session>(0);
 
-    tmp_sessions->addSession(std::make_shared<Session>(0));
-    tmp_sessions->addSession(std::make_shared<Session>(0));
-    tmp_sessions->addSession(std::make_shared<Session>(0));
+        weak_refs.push_back(session1);
+        weak_refs.push_back(session2);
+        weak_refs.push_back(session3);
 
-    delete tmp_sessions;
+        tmp_sessions->addSession(session1);
+        tmp_sessions->addSession(session2);
+        tmp_sessions->addSession(session3);
+
+        delete tmp_sessions;
+    }
+
+    // Verify all sessions were destroyed
+    for (const auto& weak_ref : weak_refs) {
+        EXPECT_TRUE(weak_ref.expired()) << "Session was not properly destroyed";
+    }
 }
 
 TEST_F(SessionsTest, AddSessionFull) {
-    for (uint32_t i = 0; i < configuration.max_players; i++) {
+    for (uint32_t i = 0; i < configuration->max_players; i++) {
         sessions.addSession(std::make_shared<Session>(i));
     }
 

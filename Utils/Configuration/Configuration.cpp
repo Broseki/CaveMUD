@@ -5,8 +5,12 @@
 #include "Configuration.h"
 
 #include <fstream>
+
+#include "../Logger/Logger.h"
 #include "nlohmann/json.hpp"
 using json = nlohmann::json;
+
+Configuration* Configuration::m_instance = nullptr;
 
 Configuration::Configuration(std::string configuration_file_path) {
     // Get the configuration data from the file
@@ -59,4 +63,27 @@ std::string Configuration::toString() const {
            std::string("\n    Tick Rate: ") + std::to_string(tick_rate) +
            std::string("\n  System Settings:") +
            std::string("\n    log_level: ") + log_level;
+}
+
+Configuration* Configuration::initialize(std::string configuration_file_path) {
+    if (m_instance == nullptr) {
+        m_instance = new Configuration(configuration_file_path);
+    } else {
+        Logger::get_instance()->log(Logger::WARNING, "Configuration already initialized");
+    }
+    return m_instance;
+}
+
+Configuration* Configuration::get_instance() {
+    if (m_instance == nullptr) {
+        throw std::runtime_error("Attempted to get the configuration instance before it was initialized");
+    }
+    return m_instance;
+}
+
+void Configuration::destroy() {
+    if (m_instance != nullptr) {
+        delete m_instance;
+        m_instance = nullptr;
+    }
 }
