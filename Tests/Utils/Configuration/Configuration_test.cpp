@@ -1,32 +1,40 @@
 #include "gtest/gtest.h"
 #include "../../../Utils/Configuration/Configuration.h"
 
+#include "../../../Utils/Logger/Logger.h"
+
 class ConfigurationTest : public ::testing::Test {
 protected:
-    ConfigurationTest() : configuration("test_config.json") {}
-    Configuration configuration;
+    ConfigurationTest() : logger(Logger::initialize(&std::cout, Logger::ERROR)), configuration(Configuration::initialize("test_config.json")) {}
+    Logger* logger;
+    Configuration* configuration;
+
+    static void TearDownTestSuite() {
+        Configuration::destroy();
+        Logger::destroy();
+    }
 };
 
 TEST_F(ConfigurationTest, ThreadSettings) {
-    EXPECT_EQ(configuration.connection_establishment_handler_thread_count, 43432);
-    EXPECT_EQ(configuration.player_session_socket_handler_thread_count, 5452);
-    EXPECT_EQ(configuration.game_loop_thread_count, 3425);
+    EXPECT_EQ(configuration->connection_establishment_handler_thread_count, 43432);
+    EXPECT_EQ(configuration->player_session_socket_handler_thread_count, 5452);
+    EXPECT_EQ(configuration->game_loop_thread_count, 3425);
 }
 
 TEST_F(ConfigurationTest, NetworkingSettings) {
-    EXPECT_EQ(configuration.game_port, 11111);
-    EXPECT_EQ(configuration.connection_queue_size, 5);
-    EXPECT_EQ(configuration.socket_buffer_size, 1000);
+    EXPECT_EQ(configuration->game_port, 11111);
+    EXPECT_EQ(configuration->connection_queue_size, 5);
+    EXPECT_EQ(configuration->socket_buffer_size, 1000);
 }
 
 TEST_F(ConfigurationTest, GameSettings) {
-    EXPECT_EQ(configuration.max_players, 10);
-    EXPECT_EQ(configuration.world_id, 112);
-    EXPECT_EQ(configuration.tick_rate, 12);
+    EXPECT_EQ(configuration->max_players, 10);
+    EXPECT_EQ(configuration->world_id, 112);
+    EXPECT_EQ(configuration->tick_rate, 12);
 }
 
 TEST_F(ConfigurationTest, SystemSettings) {
-    EXPECT_EQ(configuration.log_level, "debug");
+    EXPECT_EQ(configuration->log_level, "debug");
 }
 
 TEST_F(ConfigurationTest, ToString) {
@@ -47,5 +55,10 @@ TEST_F(ConfigurationTest, ToString) {
             "\n  System Settings:"
             "\n    log_level: debug";
 
-    EXPECT_EQ(configuration.toString(), expected_output);
+    EXPECT_EQ(configuration->toString(), expected_output);
+}
+
+TEST_F(ConfigurationTest, GetInstance) {
+    Configuration* instance = Configuration::get_instance();
+    EXPECT_EQ(instance, configuration);
 }

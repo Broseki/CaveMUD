@@ -22,40 +22,40 @@ int main(int argc, char** argv) {
         std::cout << "Usage: " << argv[0] << " [config_file]" << std::endl;
         return 1;
     }
-    Configuration configuration = Configuration(argc == 2 ? argv[1] : "config.json");
+    Configuration* configuration = Configuration::initialize(argc == 2 ? argv[1] : "config.json");
 
     // Create a log controller
-    Logger* logger = Logger::initialize(&std::cout, Logger::string_to_log_level(configuration.log_level));
+    Logger* logger = Logger::initialize(&std::cout, Logger::string_to_log_level(configuration->log_level));
     logger->log(Logger::INFO, "Logger initialized... Starting server...");
 
     // Print the configuration model
-    logger->log(Logger::DEBUG, configuration.toString());
+    logger->log(Logger::DEBUG, configuration->toString());
 
     // Initialize a vector of threads to track all the threads we create
     std::vector<std::thread> threads;
 
     // Initialize the main server socket
-    ServerSocket server_socket = ServerSocket(&configuration, logger);
+    ServerSocket server_socket = ServerSocket(configuration, logger);
 
     // Start the client socket handler threads
-    Sessions sessions = Sessions(&configuration, logger);
+    Sessions sessions = Sessions(configuration, logger);
 
     // Create server listener threads
-    for (uint32_t i = 0; i < configuration.connection_establishment_handler_thread_count; i++) {
-        threads.emplace_back(std::thread(&ServerListener::start, new ServerListener(logger, &server_socket, &configuration, &sessions)));
+    for (uint32_t i = 0; i < configuration->connection_establishment_handler_thread_count; i++) {
+        threads.emplace_back(std::thread(&ServerListener::start, new ServerListener(logger, &server_socket, configuration, &sessions)));
     }
 
     // Setup Master Clock
-    MasterClock master_clock = MasterClock(logger, configuration.player_session_socket_handler_thread_count, configuration.game_loop_thread_count);
+    MasterClock master_clock = MasterClock(logger, configuration->player_session_socket_handler_thread_count, configuration->game_loop_thread_count);
 
     // Start session handler threads
-    for (uint32_t i = 0; i < configuration.player_session_socket_handler_thread_count; i++) {
-        threads.emplace_back(std::thread(&SessionHandler::start, new SessionHandler(logger, &configuration, &master_clock, &sessions, i)));
+    for (uint32_t i = 0; i < configuration->player_session_socket_handler_thread_count; i++) {
+        threads.emplace_back(std::thread(&SessionHandler::start, new SessionHandler(logger, configuration, &master_clock, &sessions, i)));
     }
 
     // Start game loop threads
-    for (uint32_t i = 0; i < configuration.game_loop_thread_count; i++) {
-        threads.emplace_back(std::thread(&GameLoop::start, new GameLoop(logger, &configuration, &master_clock, &sessions, i)));
+    for (uint32_t i = 0; i < configuration->game_loop_thread_count; i++) {
+        threads.emplace_back(std::thread(&GameLoop::start, new GameLoop(logger, configuration, &master_clock, &sessions, i)));
     }
 
     logger->log(Logger::INFO, "Server started successfully!");

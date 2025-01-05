@@ -7,7 +7,6 @@ using namespace testing;
 class LoggerTest : public Test {
 public:
     std::ostringstream output_stream;
-
 };
 
 TEST_F(LoggerTest, LogLevelToString) {
@@ -292,6 +291,17 @@ TEST_F(LoggerTest, DuplicateInitializeCall) {
     Logger::initialize(&output_stream, Logger::DEBUG);
     // We should get a warning message
     EXPECT_EQ(output_stream.str().find("[WARNING - "), 0);
+
+    // Tear down
+    Logger::destroy();
+}
+
+TEST_F(LoggerTest, GetInstance) {
+    // Setup
+    Logger *logger = Logger::initialize(&output_stream, Logger::DEBUG);
+
+    // Test
+    EXPECT_EQ(Logger::get_instance(), logger);
 
     // Tear down
     Logger::destroy();

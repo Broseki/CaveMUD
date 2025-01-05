@@ -11,10 +11,18 @@
 class Configuration {
 
 public:
-    Configuration(std::string configuration_file_path);
+    static Configuration* initialize(std::string configuration_file_path);
+    static Configuration* get_instance();
+    static void destroy();
 
     // String representation of the configuration model
     std::string toString() const;
+
+private:
+    static Configuration* m_instance;
+
+protected:
+    Configuration(std::string configuration_file_path);
 
 public:
     // Thread settings
