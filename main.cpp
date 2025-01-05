@@ -65,7 +65,10 @@ int main(int argc, char** argv) {
         thread.join();
     }
 
-    // Destroy the logger
+    // Destroy the configuration
+    Configuration::destroy();
+
+    // Destroy the logger (last)
     Logger::destroy();
 
     return 0;
